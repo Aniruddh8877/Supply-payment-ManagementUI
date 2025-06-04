@@ -1,0 +1,223 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+<main id="main" class="main" *ngIf="action.ResponseReceived">
+  <div class="row">
+    <div class="pagetitle dashboard col-sm-8">
+      <h1>{{ action.MenuTitle }}</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a routerLink="admin/admin-dashboard">Home</a>
+          </li>
+          <li class="breadcrumb-item">{{ action.ParentMenuTitle }}</li>
+          <li class="breadcrumb-item active">{{ action.MenuTitle }}</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="col-sm-4">
+      <button mat-raised-button class="float-right" color="primary" *ngIf="action.CanCreate" data-bs-toggle="modal"
+        data-bs-target="#staticBackdrop" (click)="resetForm()">
+        Add New Party Supply Item
+      </button>
+    </div>
+  </div>
+
+  <section class="section dashboard">
+    <div class="card">
+      <div class="card-body">
+        <div class="dataTable-top">
+          <div class="dataTable-dropdown d-flex">
+            <select class="dataTable-selector form-select form-select-sm" [(ngModel)]="itemPerPage">
+              <option *ngFor="let option of PageSize" [value]="option">
+                {{ option }}
+              </option>
+            </select>
+            <span class="ms-2">Entries per page</span>
+          </div>
+          <div class="dataTable-search">
+            <input class="dataTable-input form-control form-control-sm" [(ngModel)]="Search" placeholder="Search..."
+              type="text" />
+          </div>
+        </div>
+        <div class="table-container overflow-auto">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th style="cursor: pointer" (click)="sort('CityName')">Supply Date</th>
+                <th>Party Name</th>
+                <th>Invoice NO</th>
+                <th>Particular</th>
+                <th>Remarks</th>
+                <th>Amount</th>
+
+                <!-- <th style="cursor:pointer;" (click)="sort('Status')">Status</th> -->
+                <th *ngIf="action.CanEdit">Edit</th>
+                <th *ngIf="action.CanDelete">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let item of PartySupplyItemList| filter : Search| orderBy : sortKey : reverse| paginate : { itemsPerPage: itemPerPage, currentPage: p };let i = index ">
+                <td>{{ itemPerPage * (p - 1) + i + 1 }}</td>
+                <td>{{ item.SupplyDate }}</td>
+                <td>{{item.PartyName}}</td>
+                <td>{{item.Invoice}}</td>
+                <td>{{item.Particular}}</td>
+                <td>{{item.Remarks}}</td>
+                <td>{{item.Amount}}</td>
+
+                <td>
+                  <span class="p-1" [ngClass]="
+                      item.Status == 1
+                        ? 'badge text-bg-success'
+                        : 'badge text-bg-danger'
+                    ">
+                    {{ AllStatusList[item.Status] }}
+                  </span>
+                </td>
+
+                <td *ngIf="action.CanEdit">
+                  <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                    (click)="editPartySupplyItem(item)">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                </td>
+                <td *ngIf="action.CanDelete">
+                  <button class="btn btn-sm btn-danger" (click)="deletePartySupplyItem(item)">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="dataTable-bottom">
+          <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right"
+            class="my-pagination"></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div *ngIf="action.CanEdit || action.CanCreate" class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">
+            {{ PartySupplyItem.PartySupplyItemId > 0 ? "Update" : "New" }}
+            Party Supply Item
+          </h1>
+          <button type=" button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="resetForm()"></button>
+        </div>
+        <div class="modal-body">
+          <form #formPartySupplyItem="ngForm">
+            <div class="container">
+              <div class="row">
+
+
+                <mat-form-field appearance="outline" class="col-lg-6">
+                  <mat-label>Supply Date</mat-label>
+                  <input matInput [matDatepicker]="picker" [(ngModel)]="PartySupplyItem.SupplyDate" name="SupplyDate"
+                    required />
+                  <mat-datepicker-toggle matSuffix [for]="picker" class="small-datepicker-icon"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+
+
+                <mat-form-field appearance="outline" class="col-sm-6">
+                  <mat-label>Invoice No. </mat-label>
+                  <input matInput #Invoice="ngModel" name="InvoiceNo" [(ngModel)]="PartySupplyItem.InvoiceNo" required
+                    autofocus />
+                  <mat-error>
+                    Invoice No. is <strong>required.</strong>
+                  </mat-error>
+                </mat-form-field>
+
+
+
+
+                <!-- <mat-form-field appearance="outline" class="col-sm-12">
+                  <mat-label>Party Name</mat-label>
+                  <input matInput #PartyName="ngModel" name="PartyName" [(ngModel)]="PartySupplyItem.PartyName" required
+                    autofocus />
+                  <mat-error>
+                    Party Name is <strong>required.</strong>
+                  </mat-error>
+                </mat-form-field> -->
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Party Name</mat-label>
+                  <input matInput name="PartyName" [(ngModel)]="PartySupplyItemList.PartyName"
+                    (ngModelChange)="filterPartySupplyItemList($event)" [matAutocomplete]="autoTransportPartyName"
+                    placeholder="Search By Surgery Package Name" required />
+                  <mat-autocomplete #autoTransportPartyName="matAutocomplete"
+                    (optionSelected)="afterPartySupplyItemSelected($event)">
+                    <mat-option *ngFor="let option of filterPartyName" [id]="option.PartyId" [value]="option.PartyName">
+                      {{ option.PartyName }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <button mat-icon-button matSuffix *ngIf="PartySupplyItemList.PartyName" color="primary"
+                    (click)="clearTransportSupplier()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <mat-error *ngIf="!PartySupplyItemList.PartyName">Required field !!</mat-error>
+                </mat-form-field>
+
+
+                <mat-form-field appearance="outline" class="col-sm-12">
+                  <mat-label>Particular</mat-label>
+                  <textarea matInput #Particular="ngModel" rows="5" name="Particular"
+                    [(ngModel)]="PartySupplyItem.Particular" required autofocus></textarea>
+                  <mat-error>
+                    Particular is <strong>required.</strong>
+                  </mat-error>
+                </mat-form-field>
+
+
+
+
+                <mat-form-field appearance="outline" class="col-sm-12">
+                  <mat-label>Amount</mat-label>
+                  <input matInput #Amount="ngModel" name="Amount" [(ngModel)]="PartySupplyItem.Amount" required
+                    autofocus />
+                  <mat-error>
+                    Amount is <strong>required.</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="col-sm-12">
+                  <mat-label>Remarks</mat-label>
+                  <input matInput #Remarks="ngModel" name="Remarks" [(ngModel)]="PartySupplyItem.Remarks" required
+                    autofocus />
+                  <mat-error>
+                    Remarks is <strong>required.</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="col-md-6 custom-mat-form-field">
+                  <mat-label>Status</mat-label>
+                  <mat-select name="Status" [(ngModel)]="PartySupplyItem.Status" required>
+                    <mat-option [value]="status.Key" *ngFor="let status of StatusList">{{status.Value}}</mat-option>
+                  </mat-select>
+                  <mat-error>Required Field !!</mat-error>
+                </mat-form-field>
+
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" mat-raised-button color="warn" class="me-2" data-bs-dismiss="modal"
+            (click)="resetForm()">
+            Cancel
+          </button>
+          <button mat-raised-button color="primary" (click)="savePartySupplyItem()">
+            {{ PartySupplyItem.PartySupplyItemId > 0 ? "Update" : "Submit" }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

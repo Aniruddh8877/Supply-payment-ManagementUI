@@ -1,0 +1,179 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main" *ngIf="action.ResponseReceived">
+  <div class="row">
+    <div class="pagetitle dashboard col-sm-8">
+      <h1>{{ action.MenuTitle }}</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="admin/admin-dashboard">Home</a></li>
+          <li class="breadcrumb-item">{{ action.ParentMenuTitle }}</li>
+          <li class="breadcrumb-item active">{{ action.MenuTitle }}</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="col-sm-4">
+      <button mat-raised-button class="float-right" color="primary" *ngIf="action.CanCreate" data-bs-toggle="modal"
+        data-bs-target="#staticBackdrop" (click)="resetForm()">New Balance</button>
+    </div>
+  </div>
+
+  <section class="section dashboard">
+    <div class="card">
+      <div class="card-body">
+        <div class="dataTable-top">
+          <div class="dataTable-dropdown d-flex">
+            <select class="dataTable-selector form-select form-select-sm" [(ngModel)]="itemPerPage">
+              <option *ngFor="let option of PageSize" [value]="option">{{ option }}</option>
+            </select>
+            <span class="ms-2">Entries per page</span>
+          </div>
+          <div class="dataTable-search">
+            <input class="dataTable-input form-control form-control-sm" [(ngModel)]="Search" placeholder="Search..."
+              type="text">
+          </div>
+        </div>
+
+        <div class="table-container overflow-auto">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>Party Code</th>
+                <th style="cursor:pointer;" (click)="sort('BalanceAccount')">Party Name</th>
+                <th>Debit Amount</th>
+                <th>Credit Amount</th>
+                <th>Opening Date</th>
+                <th *ngIf="action.CanEdit">Edit</th>
+                <!-- <th *ngIf="action.CanDelete">Delete</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let item of BalanceList | filter: Search | orderBy: sortKey: reverse | paginate: { itemsPerPage: itemPerPage, currentPage: p }; let i = index;">
+                <td>{{ (itemPerPage * (p - 1)) + i + 1 }}</td>
+                <td>{{item.PartyCode}}</td>
+                <td>{{ item.PartyName }}</td>
+                <td>
+                  {{item.Debit}}
+                </td>
+                <td>
+                  {{item.Credit}}
+                </td>
+
+                <td>
+                  {{item.Openingdate |date:'dd-mm-yyyy'}}
+                </td>
+                <td *ngIf="action.CanEdit">
+                  <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                    (click)="editBalance(item)">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                </td>
+                <!-- <td *ngIf="action.CanDelete">
+                  <button class="btn btn-sm btn-danger" (click)="deleteBalance(item)">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                </td> -->
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="dataTable-bottom">
+          <pagination-controls (pageChange)="onTableDataChange($event)" style="float:right;"
+            class="my-pagination"></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal -->
+  <div *ngIf="action.CanEdit || action.CanCreate" class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">
+            {{ BalanceList.BalanceAccountId > 0 ? 'Update' : 'New' }} Balance
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="resetForm()"></button>
+        </div>
+
+        <div class="modal-body">
+          <form #formBalance="ngForm">
+            <div class="container">
+              <div class="row">
+
+
+
+
+
+
+
+                <!-- Party Name -->
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Party Name</mat-label>
+                  <input matInput name="PartyName" [(ngModel)]="BalanceList.PartyName"
+                    (ngModelChange)="filterPartyList($event)" [matAutocomplete]="autoTransportPartyName"
+                    placeholder="Search By Surgery Package Name" required />
+                  <mat-autocomplete #autoTransportPartyName="matAutocomplete"
+                    (optionSelected)="afterPartyNameSelected($event)">
+                    <mat-option *ngFor="let option of PartyList" [value]="option.PartyName">
+                      {{ option.PartyName }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <button mat-icon-button matSuffix *ngIf="BalanceList.Partyname" color="primary"
+                    (click)="clearTransportSupplier()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <mat-error *ngIf="!BalanceList.PartyName">Required field !!</mat-error>
+                </mat-form-field>
+
+
+
+
+
+
+
+                <!-- Debit -->
+                <mat-form-field appearance="outline" class="col-sm-6">
+                  <mat-label>Debit</mat-label>
+                  <input matInput name="Debit" [(ngModel)]="BalanceList.Debit" required type="number">
+                  <mat-error>Debit is <strong>required</strong>.</mat-error>
+                </mat-form-field>
+
+                <!-- Credit -->
+                <mat-form-field appearance="outline" class="col-sm-6">
+                  <mat-label>Credit</mat-label>
+                  <input matInput name="Credit" [(ngModel)]="BalanceList.Credit" required type="number">
+                  <mat-error>Credit is <strong>required</strong>.</mat-error>
+                </mat-form-field>
+
+                <!-- Opening Date -->
+                <mat-form-field appearance="outline" class="col-lg-6">
+                  <mat-label>Opening Date</mat-label>
+                  <input matInput [matDatepicker]="picker" [(ngModel)]="BalanceList.OpeningDate" name="OpeningDate"
+                    required />
+                  <mat-datepicker-toggle matSuffix [for]="picker" class="small-datepicker-icon"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" mat-raised-button color="warn" class="me-2" data-bs-dismiss="modal"
+            (click)="resetForm()">Cancel</button>
+          <button mat-raised-button color="primary" (click)="saveBalance()">
+            {{ BalanceList.BalanceAccountId > 0 ? 'Update' : 'Submit' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

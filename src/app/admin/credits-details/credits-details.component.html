@@ -1,0 +1,76 @@
+<!-- <app-progress *ngIf="dataLoading"></app-progress> -->
+<main id="main" class="main">
+     <div class="row">
+          <div class="pagetitle dashboard col-sm-8">
+               <h1>sdf</h1>
+               <nav>
+                    <ol class="breadcrumb">
+                         <li class="breadcrumb-item"><a routerLink="admin/admin-dashboard">Home</a></li>
+                         <li class="breadcrumb-item">sdf</li>
+                         <li class="breadcrumb-item active">sdf</li>
+                    </ol>
+               </nav>
+          </div>
+     </div>
+     <section class="section dashboard">
+          <div class="card">
+               <div class="card-body ">
+                    <div class="dataTable-top">
+                         <div class="dataTable-dropdown d-flex">
+                              <select class="dataTable-selector form-select form-select-sm">
+                                   <option>option </option>
+                              </select>
+                              <span class="ms-2">Entries per page</span>
+                         </div>
+                         <div class="dataTable-search">
+                              <input class="dataTable-input form-control form-control-sm" placeholder="Search..."
+                                   type="text">
+                         </div>
+                    </div>
+                    <div class="table-container d-flex  gap-2">
+
+                         <mat-form-field appearance="outline" class="col-sm-2">
+                              <mat-label>date</mat-label>
+                              <input matInput name="date" required autofocus>
+                              <mat-error>
+                                   date is <strong>required.</strong>
+                              </mat-error>
+                         </mat-form-field>
+
+                         <mat-form-field appearance="outline" class="col-sm-2">
+                              <mat-label>party Name</mat-label>
+                              <input matInput name="partyName" required autofocus>
+                              <mat-error>
+                                   party Name is <strong>required.</strong>
+                              </mat-error>
+                         </mat-form-field>
+
+                         <mat-form-field appearance="outline" class="col-sm-2">
+                              <mat-label>Invoice No</mat-label>
+                              <input matInput name="Invoice" required autofocus>
+                              <mat-error>
+                                   Invoic is <strong>required.</strong>
+                              </mat-error>
+                         </mat-form-field>
+
+                         <mat-form-field appearance="outline" class="col-sm-2">
+                              <mat-label>Remarks</mat-label>
+                              <input matInput name="Remarks" required autofocus>
+                              <mat-error>
+                                   Remarks is <strong>required.</strong>
+                              </mat-error>
+                         </mat-form-field>
+
+                         <mat-form-field appearance="outline" class="col-sm-2">
+                              <mat-label>Amount</mat-label>
+                              <input matInput name="Amount" required autofocus>
+                              <mat-error>
+                                   Amount is <strong>required.</strong>
+                              </mat-error>
+                         </mat-form-field>
+
+                    </div>
+               </div>
+          </div>
+     </section>
+</main>

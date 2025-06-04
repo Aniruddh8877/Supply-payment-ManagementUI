@@ -1,0 +1,366 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+<main id="main" class="main" *ngIf="action.ResponseReceived">
+  <div class="row">
+    <div class="pagetitle dashboard col-sm-8">
+      <h1>{{ action.MenuTitle }}</h1>
+      <nav>
+        <ol class="breadcrumb">
+           <li class="breadcrumb-item"><a routerLink="admin/admin-dashboard">Home</a></li>
+          <li class="breadcrumb-item">{{action.ParentMenuTitle}}</li>
+          <li class="breadcrumb-item active">{{action.MenuTitle}}</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="col-sm-4">
+      <button
+        mat-raised-button
+        class="float-right"
+        color="primary"
+        *ngIf="action.CanCreate"
+        data-bs-toggle="modal"
+        data-bs-target="#staticBackdrop"
+        (click)="resetForm()"
+      >
+        New Party Registration
+      </button>
+    </div>
+  </div>
+
+  <section class="section dashboard">
+    <div class="card">
+      <div class="card-body">
+        <div class="dataTable-top">
+          <div class="dataTable-dropdown d-flex">
+            <select
+              class="dataTable-selector form-select form-select-sm"
+              [(ngModel)]="itemPerPage"
+            >
+              <option *ngFor="let option of PageSize" [value]="option">
+                {{ option }}
+              </option>
+            </select>
+            <span class="ms-2">Entries per page</span>
+          </div>
+          <div class="dataTable-search">
+            <input
+              class="dataTable-input form-control form-control-sm"
+              [(ngModel)]="Search"
+              placeholder="Search..."
+              type="text"
+            />
+          </div>
+        </div>
+        <div class="table-container overflow-auto">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th style="cursor: pointer" (click)="sort('CityName')">
+                  Party Code
+                </th>
+                <th style="cursor: pointer" (click)="sort('StateName')">
+                  Party Name
+                </th>
+                <th style="cursor: pointer" (click)="sort('StateName')">
+                  Mobile No
+                </th>
+                <th style="cursor: pointer" (click)="sort('StateName')">
+                  Alternate Mobile No
+                </th>
+                <th style="cursor: pointer" (click)="sort('StateName')">
+                  Email
+                </th>
+                <th style="cursor: pointer" (click)="sort('StateName')">
+                  Location
+                </th>
+                <th style="cursor: pointer" (click)="sort('StateName')">
+                  Address
+                </th>
+                <th style="cursor: pointer" (click)="sort('StateName')">
+                  GST No
+                </th>
+                <th style="cursor: pointer" (click)="sort('StateName')">
+                  Party Status
+                </th>
+                <!-- <th style="cursor:pointer;" (click)="sort('StateName')">CreatedBy</th> -->
+                <!-- <th style="cursor:pointer;" (click)="sort('StateName')">CreatedOn</th> -->
+                <th *ngIf="action.CanEdit">Edit</th>
+                <th *ngIf="action.CanDelete">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let item of PartyList
+                    | filter : Search
+                    | orderBy : sortKey : reverse
+                    | paginate : { itemsPerPage: itemPerPage, currentPage: p };
+                  let i = index
+                "
+              >
+                <td>{{ itemPerPage * (p - 1) + i + 1 }}</td>
+                <td>{{ item.PartyCode }}</td>
+                <td>{{ item.PartyName }}</td>
+                <td>{{ item.MobileNo }}</td>
+                <td>{{ item.AlternateMobileNo }}</td>
+                <td>{{ item.Email }}</td>
+                <td>{{ item.LocationName }}</td>
+                <td>{{ item.Address }}</td>
+                <td>{{ item.GSTNo }}</td>
+                <td>
+                  <span
+                    class="p-1"
+                    [ngClass]="
+                      item.PartyStatus == 1
+                        ? 'badge text-bg-success'
+                        : 'badge text-bg-danger'
+                    "
+                  >
+                    {{ AllStatusList[item.PartyStatus] }}
+                  </span>
+                </td>
+                <!-- <td>{{item.CreatedBy}}</td> -->
+                <!-- <td>{{item.CreatedOn | date: "dd-MM-yy"}}</td> -->
+                <td *ngIf="action.CanEdit">
+                  <button
+                    class="btn btn-sm btn-warning"
+                    data-bs-toggle="modal"
+                    data-bs-target="#staticBackdrop"
+                    (click)="editParty(item)"
+                  >
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                </td>
+                <td *ngIf="action.CanDelete">
+                  <button
+                    class="btn btn-sm btn-danger"
+                    (click)="deleteParty(item)"
+                  >
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="dataTable-bottom">
+          <pagination-controls
+            (pageChange)="onTableDataChange($event)"
+            style="float: right"
+            class="my-pagination"
+          ></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div
+    *ngIf="action.CanEdit || action.CanCreate"
+    class="modal fade"
+    id="staticBackdrop"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">
+            {{ Party.PartyId > 0 ? "Update" : "New" }} Party
+          </h1>
+          <button
+            type=" button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            (click)="resetForm()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form #formParty="ngForm">
+            <div class="container">
+              <div class="row">
+                <mat-form-field appearance="outline" class="col-sm-12">
+                  <mat-label>Party Name</mat-label>
+                  <input
+                    matInput
+                    #PartyName="ngModel"
+                    name="PartyName"
+                    [(ngModel)]="Party.PartyName"
+                    required
+                    autofocus
+                  />
+                  <mat-error
+                    *ngIf="
+                      PartyName.dirty ||
+                      PartyName.touched ||
+                      (PartyName.invalid && isSubmitted)
+                    "
+                  >
+                    Party name is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="col-sm-6">
+                  <mat-label>Mobile No</mat-label>
+                  <input
+                    matInput
+                    #MobileNo="ngModel"
+                    name="MobileNo"
+                    [(ngModel)]="Party.MobileNo"
+                    required
+                    autofocus
+                    maxlength="10"
+                    pattern="^[0-9]{0,10}$"
+                    type="tel"
+                  />
+                  <mat-error
+                    *ngIf="(MobileNo.dirty || MobileNo.touched || isSubmitted) && MobileNo.errors?.['required']"
+                  >
+                    Mobile No is <strong>required</strong>
+                  </mat-error>
+                  <mat-error *ngIf="MobileNo.errors?.['pattern']">
+                    Only digits allowed (max 10 digits)
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="col-sm-6">
+                  <mat-label>Alternate Mobile No</mat-label>
+                  <input
+                    matInput
+                    #AlternateMobileNo="ngModel"
+                    name="AlternateMobileNo"
+                    [(ngModel)]="Party.AlternateMobileNo"
+                    maxlength="10"
+                    pattern="^[0-9]{0,10}$"
+                    type="tel"
+                    autofocus
+                  />
+
+                  <mat-error
+                    *ngIf="(AlternateMobileNo.dirty || AlternateMobileNo.touched || isSubmitted) && AlternateMobileNo.errors?.['required']"
+                  >
+                    Alternate Mobile No is <strong>required</strong>
+                  </mat-error>
+                  <mat-error *ngIf="AlternateMobileNo.errors?.['pattern']">
+                    Only digits allowed (max 10 digits)
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="col-sm-6">
+                  <mat-label>Email</mat-label>
+                  <input
+                    matInput
+                    #Email="ngModel"
+                    name="Email"
+                    [(ngModel)]="Party.Email"
+                    autofocus
+                  />
+                  <mat-error
+                    *ngIf="
+                      Email.dirty ||
+                      Email.touched ||
+                      (Email.invalid && isSubmitted)
+                    "
+                  >
+                    Email is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="col-sm-6">
+                  <mat-label>Location</mat-label>
+                  <mat-select
+                    name="LocationId"
+                    [(ngModel)]="Party.LocationId"
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let data of LocationList"
+                      [value]="data.LocationId"
+                    >
+                      {{ data.LocationName }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error>Required Field !!</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="col-sm-12">
+                  <mat-label>Address</mat-label>
+                  <textarea
+                    matInput
+                    #Address="ngModel"
+                    name="Address"
+                    [(ngModel)]="Party.Address"
+                    required
+                    autofocus
+                  > </textarea>
+                  <mat-error
+                    *ngIf="
+                      Address.dirty ||
+                      Address.touched ||
+                      (Address.invalid && isSubmitted)
+                    "
+                  >
+                    Address is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="col-sm-6">
+                  <mat-label>GST No.</mat-label>
+                  <input
+                    matInput
+                    #GSTNo="ngModel"
+                    name="GSTNo"
+                    [(ngModel)]="Party.GSTNo"
+                    autofocus
+                  />
+                  <mat-error
+                    *ngIf="
+                      GSTNo.dirty ||
+                      GSTNo.touched ||
+                      (GSTNo.invalid && isSubmitted)
+                    "
+                  >
+                    GST No. is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="col-sm-6">
+                  <mat-label>Party Status</mat-label>
+                  <mat-select
+                    name="Status"
+                    [(ngModel)]="Party.PartyStatus"
+                    required
+                  >
+                    <mat-option
+                      [value]="status.Key"
+                      *ngFor="let status of StatusList"
+                      >{{ status.Value }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            mat-raised-button
+            color="warn"
+            class="me-2"
+            data-bs-dismiss="modal"
+            (click)="resetForm()"
+          >
+            Cancel
+          </button>
+          <button mat-raised-button color="primary" (click)="saveParty()">
+            {{ Party.PartyId > 0 ? "Update" : "Submit" }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
