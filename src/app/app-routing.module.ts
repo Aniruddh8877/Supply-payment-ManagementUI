@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminLoginComponent } from './admin/admin-login/admin-login.component';
 import { PageNotFoundComponent } from './component/page-not-found/page-not-found.component';
@@ -22,6 +22,8 @@ import { LocationComponent } from './admin/location/location.component';
 import { CreditsDetailsComponent } from './admin/credits-details/credits-details.component';
 import { OpeningBalanceComponent } from './admin/opening-balance/opening-balance.component';
 import { PartySupplyItemComponent } from './admin/party-supply-item/party-supply-item.component';
+import { PartyPaymentComponent } from './admin/party-payment/party-payment.component';
+import { PartyLadgerHistoryComponent } from './admin/party-ladger-history/party-ladger-history.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/admin-login', pathMatch: 'full' },
@@ -49,7 +51,9 @@ const routes: Routes = [
       { path: 'Location', component: LocationComponent },
       { path: 'credits', component: CreditsDetailsComponent },
       { path: 'opening-balance', component: OpeningBalanceComponent },
-      { path:'PartySupplyItem',component:PartySupplyItemComponent},
+      { path: 'PartySupplyItem', component: PartySupplyItemComponent },
+      { path: 'PartyPayment', component: PartyPaymentComponent },
+      { path: 'PartyLadgerHistory', component: PartyLadgerHistoryComponent }
     ],
   },
   { path: 'page-not-found', component: PageNotFoundComponent },
@@ -60,4 +64,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

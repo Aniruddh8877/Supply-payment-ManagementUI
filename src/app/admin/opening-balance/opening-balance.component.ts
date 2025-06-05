@@ -10,6 +10,7 @@ import { LoadDataService } from '../../utils/load-data.service';
 import { ActionModel, RequestModel, StaffLoginModel } from '../../utils/interface';
 import { LocalService } from '../../utils/local.service';
 import { Router } from '@angular/router';
+
 declare var $: any
 declare var toastr: any;
 @Component({
@@ -32,6 +33,9 @@ export class OpeningBalanceComponent {
   AllStatusList = Status;
   BalanceList: any = []
   Balance: any = {}
+  BalanceAccount: any = [];
+  PartyPaymentDetail: any = {}
+
   PartyList: any;
   PartyListall: any;
 
@@ -43,29 +47,18 @@ export class OpeningBalanceComponent {
     private router: Router
   ) { }
 
-  sort(key: any) {
-    this.sortKey = key;
-    this.reverse = !this.reverse;
-  }
-
-  onTableDataChange(p: any) {
-    this.p = p
-  }
-
-
   ngOnInit(): void {
 
-    console.log(this.staffLogin);
+    //console.log(this.staffLogin);
     this.staffLogin = this.localService.getEmployeeDetail();
     this.validiateMenu();
+    this.resetForm();
     this.getBalanceList();
     this.getPartyList();
     // this.getStatusList();
     // this.getStateList();
-    this.resetForm();
+
   }
-
-
 
   validiateMenu() {
     var request: RequestModel = {
@@ -80,45 +73,50 @@ export class OpeningBalanceComponent {
       this.dataLoading = false;
     }))
   }
-
+  sort(key: any) {
+    this.sortKey = key;
+    this.reverse = !this.reverse;
+  }
   @ViewChild('formBalance') formBalance: NgForm;
+
+  onTableDataChange(p: any) {
+    this.p = p
+  }
+  
   resetForm() {
-    this.BalanceList = {
+    this.Balance = {
       BalanceAccountId: 0,
       BalanceName: '',
       Debit: 0,
       Credit: 0,
-      OpeningDate: null,
+      Openingdate: null,
       Status: 1
       // include other required fields with default values
     };
   }
 
-  filterBalanceList(value: any) {
-    if (value) {
-      const filterValue = value.toLowerCase();
-      this.filterBalanceList = this.BalanceList.filter((option: any) => option.StateName.toLowerCase().includes(filterValue));
-    } else {
-      this.filterBalanceList = this.BalanceList;
-    }
-  }
+  // filterBalanceList(value: any) {
+  //   if (value) {
+  //     const filterValue = value.toLowerCase();
+  //     this.filterBalanceList = this.BalanceList.filter((option: any) => option.StateName.toLowerCase().includes(filterValue));
+  //   } else {
+  //     this.filterBalanceList = this.BalanceList;
+  //   }
+  // }
 
-  afterBalanceSelected(event: any) {
-    this.BalanceList.LocationId = event.option.id;
-  }
+  // afterBalanceSelected(event: any) {
+  //   this.BalanceList.PartyId = event.option.id;
+  // }
 
-
-  getBalanceList() {
+  getPartyList() {
     var obj: RequestModel = {
       request: this.localService.encrypt(JSON.stringify({})).toString()
     }
     this.dataLoading = true
-    this.service.getBalanceList(obj).subscribe(r1 => {
+    this.service.getPartyList(obj).subscribe(r1 => {
       let response = r1 as any
       if (response.Message == ConstantData.SuccessMessage) {
-        this.BalanceList = response.BalanceList;
-        this.filterBalanceList = this.BalanceList;
-        console.log("this is booking list for location", this.BalanceList);
+        this.PartyListall = response.PartyList;
       } else {
         this.toastr.error(response.Message)
       }
@@ -129,23 +127,60 @@ export class OpeningBalanceComponent {
     }))
   }
 
+  
+
+  afterPartyNameSelected(event: any) {
+    const selectedParty = this.PartyList.find(
+      (x: any) => x.PartyName === event.option.value
+    );
+
+    if (selectedParty) {
+      this.Balance.PartyId = selectedParty.PartyId;
+      this.Balance.PartyName = selectedParty.PartyName;
+    }
+  }
+
+filterPartyList(value: string) {
+    if (value) {
+      const filterValue = value.toLowerCase();
+      this.PartyList = this.PartyListall.filter((option: any) =>
+        option.PartyName.toLowerCase().includes(filterValue)
+      );
+    } else {
+      this.PartyList = this.PartyListall;
+    }
+  }
+  clearTransportSupplier() {
+    this.PartyList = this.PartyListall;
+    this.Balance.PackageCollectionId = null;
+    this.Balance.PackageName = '';
+  }
+
+  
+
   saveBalance() {
+    this.isSubmitted=true;
     this.formBalance.control.markAllAsTouched();
     if (this.formBalance.invalid) {
       this.toastr.error("Fill all the required fields !!")
       return
     }
-    this.dataLoading = true;
-    this.BalanceList.OpeningDate = this.loadData.loadDateTime(this.BalanceList.OpeningDate);
-    this.BalanceList.CreatedBy = this.staffLogin.StaffId;
+
+    this.Balance.CreatedBy = this.staffLogin.StaffLoginId;
+    this.Balance.UpdatedBy = this.staffLogin.StaffLoginId;
+    this.Balance.Openingdate = this.loadData.loadDateTime(this.Balance.Openingdate);
+   
     var data = {
-      GetBalanceAccount: this.BalanceList,
-      GetPartyPaymentDetail: this.BalanceList
+      GetBalanceAccount: this.Balance,
+      GetPartyPaymentDetail: this.Balance,
     }
+      console.log(data);
+      
+
     var obj: RequestModel = {
       request: this.localService.encrypt(JSON.stringify(data)).toString()
     }
-    console.log(data);
+    this.dataLoading = true;
 
     this.service.SaveBalance(obj).subscribe(r1 => {
       let response = r1 as any
@@ -168,7 +203,26 @@ export class OpeningBalanceComponent {
     }))
   }
 
-
+getBalanceList() {
+    var obj: RequestModel = {
+      request: this.localService.encrypt(JSON.stringify({})).toString()
+    }
+    this.dataLoading = true
+    this.service.getBalanceList(obj).subscribe(r1 => {
+      let response = r1 as any
+      if (response.Message == ConstantData.SuccessMessage) {
+        this.BalanceList = response.BalanceList;
+        // this.filterBalanceList = this.BalanceList;
+        // console.log("this is booking list for location", this.BalanceList);
+      } else {
+        this.toastr.error(response.Message)
+      }
+      this.dataLoading = false;
+    }, (err => {
+      this.toastr.error("Error while fetching records")
+      this.dataLoading = false;
+    }))
+  }
 
   deleteBalance(obj: any) {
 
@@ -193,58 +247,14 @@ export class OpeningBalanceComponent {
     }
   }
 
-  getPartyList() {
-    var obj: RequestModel = {
-      request: this.localService.encrypt(JSON.stringify({})).toString()
-    }
-    this.dataLoading = true
-    this.service.getPartyList(obj).subscribe(r1 => {
-      let response = r1 as any
-      if (response.Message == ConstantData.SuccessMessage) {
-        this.PartyListall = response.PartyList;
-      } else {
-        this.toastr.error(response.Message)
-      }
-      this.dataLoading = false;
-    }, (err => {
-      this.toastr.error("Error while fetching records")
-      this.dataLoading = false;
-    }))
-  }
+
 
 
 
   editBalance(obj: any) {
     this.resetForm()
-    this.BalanceList = obj
-  }
-
-  filterPartyList(value: string) {
-    if (value) {
-      const filterValue = value.toLowerCase();
-      this.PartyList = this.PartyListall.filter((option: any) =>
-        option.PartyName.toLowerCase().includes(filterValue)
-      );
-    } else {
-      this.PartyList = this.PartyListall;
-    }
-  }
-
-  afterPartyNameSelected(event: any) {
-    const selectedParty = this.PartyList.find(
-      (x: any) => x.PartyName === event.option.value
-    );
-
-    if (selectedParty) {
-      this.BalanceList.PartyId = selectedParty.PartyId;
-      this.BalanceList.PartyName = selectedParty.PartyName;
-    }
+    this.Balance = obj
   }
 
 
-  clearTransportSupplier() {
-    this.PartyList = this.PartyListall;
-    this.BalanceList.PackageCollectionId = null;
-    this.BalanceList.PackageName = '';
-  }
 }

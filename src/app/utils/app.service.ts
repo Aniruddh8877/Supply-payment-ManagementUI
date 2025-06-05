@@ -17,7 +17,7 @@ export class AppService {
     return ConstantData.getBaseUrl();
   }
 
-  
+
   //PartyDetails
   getPartyList(obj: any) {
     return this.http.post(this.apiUrl + "Party/PartyList", obj, { headers: this.headers })
@@ -52,18 +52,36 @@ export class AppService {
     return this.http.post(this.apiUrl + "Balance/DeleteBalance", obj, { headers: this.headers })
   }
 
-  //
+  //PartySupplyItem
 
-  getPartySupplyItemList(obj:any){
-    return this.http.post(this.apiUrl+"PartySupplyItem/PartySupplyItemList",obj,{headers:this.headers})
+  getPartySupplyItemList(obj: any) {
+    return this.http.post(this.apiUrl + "PartySupplyItem/PartySupplyItemList", obj, { headers: this.headers })
   }
-  SavePartySupplyItem(obj:any){
-    return this.http.post(this.apiUrl+"PartySupplyItem/SavePartySupplyItem",obj,{headers:this.headers})
+  SavePartySupplyItem(obj: any) {
+    return this.http.post(this.apiUrl + "PartySupplyItem/SavePartySupplyItem", obj, { headers: this.headers })
   }
-  DeletePartySupplyItem(obj:any){
-    return this.http.post(this.apiUrl+"PartySupplyItem/DeletePartySupplyItem",obj,{headers:this.headers})
+  DeletePartySupplyItem(obj: any) {
+    return this.http.post(this.apiUrl + "PartySupplyItem/DeletePartySupplyItem", obj, { headers: this.headers })
   }
 
+  //PartyPayment
+
+  getPartyPaymentList(obj: any) {
+    return this.http.post(this.apiUrl + "PartyPayment/PartyPaymentList", obj, { headers: this.headers })
+  }
+  SavePartyPayment(obj: any) {
+    return this.http.post(this.apiUrl + "PartyPayment/SavePartyPayment", obj, { headers: this.headers })
+  }
+  DeletePartyPayment(obj: any) {
+    return this.http.post(this.apiUrl + "PartyPayment/DeletePartyPayment", obj, { headers: this.headers })
+  }
+
+
+  //Paymentdetail
+
+  GetPartyPaymentDetailList(obj:any){
+    return this.http.post(this.apiUrl+"PartyPaymentDetail/PartyPaymentDetailList",obj,{headers:this.headers})
+  }
   // District
   getDistrictList(obj: any) {
     return this.http.post(this.apiUrl + "District/DistrictList", obj, { headers: this.headers })
@@ -288,5 +306,9 @@ export class AppService {
 
   getStatusList(obj: any) {
     return this.http.get(this.apiUrl + "enum/StatusList")
+  }
+
+  getPaymentModeList(obj: any) {
+    return this.http.get(this.apiUrl + "enum/PaymentMode")
   }
 }

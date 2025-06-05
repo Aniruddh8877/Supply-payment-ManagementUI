@@ -5,7 +5,7 @@ import { ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AppService } from '../../utils/app.service';
-import { Status } from '../../utils/enum';
+import { PaymentMode, Status } from '../../utils/enum';
 import { LoadDataService } from '../../utils/load-data.service';
 import {
   ActionModel,
@@ -17,16 +17,16 @@ import { Router } from '@angular/router';
 declare var $: any;
 declare var toastr: any;
 @Component({
-  selector: 'app-party-supply-item',
-  templateUrl: './party-supply-item.component.html',
-  styleUrls: ['./party-supply-item.component.css'],
+  selector: 'app-party-payment',
+  templateUrl: './party-payment.component.html',
+  styleUrls: ['./party-payment.component.css']
 })
-export class PartySupplyItemComponent {
+export class PartyPaymentComponent {
   dataLoading: boolean = false;
   CityList: any = [];
-  PartySupplyItemList: any = [];
-  PartySupplyItem: any = {};
-  PartyPaymentDetail:any={};
+  PartyPaymentList: any = [];
+  PartyPayment: any = {};
+  PartyPaymentDetail: any = {};
 
   isSubmitted = false;
   PageSize = ConstantData.PageSizes;
@@ -38,13 +38,16 @@ export class PartySupplyItemComponent {
   StateList: any[] = [];
   filterState: any[] = [];
   StatusList = this.loadData.GetEnumList(Status);
+  PaymentModeList=this.loadData.GetEnumList(PaymentMode)
   action: ActionModel = {} as ActionModel;
   staffLogin: StaffLoginModel = {} as StaffLoginModel;
+  AllPaymentModeList =PaymentMode;
   AllStatusList = Status;
   PartyList: any = [];
-  PartySupplyItemListAll: any;
+ PartyPaymentListAll: any;
   filterPartyName: any;
-  PaymentDate:any={};
+  PaymentDate: any = {};
+
 
   sort(key: any) {
     this.sortKey = key;
@@ -62,15 +65,15 @@ export class PartySupplyItemComponent {
     private router: Router
   ) { }
 
+
   ngOnInit(): void {
     console.log(this.staffLogin);
     this.staffLogin = this.localService.getEmployeeDetail();
     this.validiateMenu();
-    this.getPartySupplyItemList();
-    this.getPartyList();
-    //this.getStatusList();
-    // this.getStateList();
+    
     this.resetForm();
+    this.getPartyList();
+    this.getPartyPaymentList();  
   }
 
 
@@ -102,21 +105,20 @@ export class PartySupplyItemComponent {
     );
   }
 
-  @ViewChild('formPartySupplyItem') formPartySupplyItem: NgForm;
+  @ViewChild('formPartyPayment') formPartyPayment: NgForm;
 
   resetForm() {
-    this.PartySupplyItem = {};
-    if (this.formPartySupplyItem) {
-      this.formPartySupplyItem.control.markAsPristine();
-      this.formPartySupplyItem.control.markAsUntouched();
+    this.PartyPayment = {};
+    if (this.formPartyPayment) {
+      this.formPartyPayment.control.markAsPristine();
+      this.formPartyPayment.control.markAsUntouched();
     }
     this.isSubmitted = false;
-    this.PartySupplyItem.Status = 1;
+    this.PartyPayment.Status = 1;
   }
 
 
-
-  filterPartySupplyItemList(value: any) {
+  filterPartyPaymentList(value: any) {
     if (value) {
       const filterValue = value.toLowerCase();
       this.filterPartyName = this.PartyList.filter((option: any) =>
@@ -127,10 +129,9 @@ export class PartySupplyItemComponent {
     }
   }
 
-  afterPartySupplyItemSelected(event: any) {
-    this.PartySupplyItem.PartyId = event.option.id;
+  afterPartyPaymentSelected(event: any) {
+    this.PartyPayment.PartyId = event.option.id;
   }
-
   getStatusList() {
 
     var obj = {}
@@ -139,18 +140,33 @@ export class PartySupplyItemComponent {
       let response = r1 as any
       if (response.Message == ConstantData.SuccessMessage) {
         this.StatusList = response.StatusList;
-
-
       } else {
         this.toastr.error(response.Message)
       }
-
       this.dataLoading = false
     }, (err => {
       this.toastr.error("Error while fetching records")
       this.dataLoading = false;
     }))
   }
+
+  getPaymentModeList(){
+     var obj = {}
+    this.dataLoading = true
+    this.service.getPaymentModeList(obj).subscribe(r1 => {
+      let response = r1 as any
+      if (response.Message == ConstantData.SuccessMessage) {
+        this.PaymentModeList = response.PaymentModeList;
+      } else {
+        this.toastr.error(response.Message)
+      }
+      this.dataLoading = false
+    }, (err => {
+      this.toastr.error("Error while fetching records")
+      this.dataLoading = false;
+    }))
+  }
+
   getPartyList() {
     var obj: RequestModel = {
       request: this.localService.encrypt(JSON.stringify({})).toString(),
@@ -175,19 +191,18 @@ export class PartySupplyItemComponent {
     );
   }
 
-
-  getPartySupplyItemList() {
+  getPartyPaymentList(){
 
     var obj: RequestModel = {
       request: this.localService.encrypt(JSON.stringify({})).toString()
     }
     this.dataLoading = true;
-    this.service.getPartySupplyItemList(obj).subscribe(
+    this.service.getPartyPaymentList(obj).subscribe(
       (r1) => {
         let response = r1 as any;
         if (response.Message == ConstantData.SuccessMessage) {
-          this.PartySupplyItemList = response.PartySupplyItemList;
-          // console.log(this.PartySupplyItemList);
+          this.PartyPaymentList = response.PartyPaymentList;
+          console.log(this.PartyPaymentList,"kshflkdshflkdshflk");
 
         } else {
           this.toastr.error(response.Message);
@@ -202,39 +217,39 @@ export class PartySupplyItemComponent {
   }
 
 
-
-  savePartySupplyItem() {
-    this.isSubmitted=true
-    this.formPartySupplyItem.control.markAllAsTouched();
-    if (this.formPartySupplyItem.invalid) {
+  savePartyPayment() {
+    this.isSubmitted = true
+    this.formPartyPayment.control.markAllAsTouched();
+    if (this.formPartyPayment.invalid) {
       this.toastr.error("Fill all the required fields !!")
       return;
     }
     this.dataLoading = true;
-    // this.PartySupplyItemList.
-    this.PartySupplyItem.UpdatedBy = this.staffLogin.StaffLoginId;
-    this.PartySupplyItem.CreatedBy = this.staffLogin.StaffLoginId;
-    this.PartySupplyItem.SupplyDate = this.loadData.loadDateTime(this.PartySupplyItem.SupplyDate);
+    // this.PartyPaymentList.
+    this.PartyPayment.UpdatedBy = this.staffLogin.StaffLoginId;
+    this.PartyPayment.CreatedBy = this.staffLogin.StaffLoginId;
+    this.PartyPayment.PaymentDate = this.loadData.loadDateTime(this.PartyPayment.PaymentDate);
     this.PaymentDate = Date.now;
+    this.PartyPaymentDetail.Credit
     var data = {
-      GetPartySupplyItem: this.PartySupplyItem,
-      GetPartyPaymentDetail:this.PartySupplyItem
+      GetPartyPayment: this.PartyPayment,
+      GetPartyPaymentDetail: this.PartyPayment
     }
     var obj: RequestModel = {
       request: this.localService.encrypt(JSON.stringify(data)).toString()
     }
-    this.service.SavePartySupplyItem(obj).subscribe(rl => {
+    this.service.SavePartyPayment(obj).subscribe(rl => {
       let response = rl as any
       if (response.Message == ConstantData.SuccessMessage) {
-        if (this.PartySupplyItem.PartySupplyItemId > 0) {
-          this.toastr.success("Debit Updated successfully")
+        if (this.PartyPayment.PartyPaymentId > 0) {
+          this.toastr.success(" Credit Updated successfully")
           document.getElementById("modalClose")?.click();
         }
         else {
-          this.toastr.success("Debit Add successfully")
+          this.toastr.success(" Credit Add successfully")
         }
         this.resetForm();
-        this.getPartySupplyItemList();
+        this.getPartyPaymentList();
       }
       else {
         this.toastr.error(response.Message)
@@ -247,19 +262,20 @@ export class PartySupplyItemComponent {
   }
 
 
-  deletePartySupplyItem(obj: any) { }
+  deletePartyPayment(obj: any) {
+
+  }
 
 
-  editPartySupplyItem(obj: any) {
+  editPartyPayment(obj: any) {
     this.resetForm();
-    this.PartySupplyItem = obj;
+    this.PartyPayment = obj;
   }
 
   clearTransportSupplier() {
-    this.PartySupplyItemList = this.PartySupplyItemListAll;
-    this.PartySupplyItemList.PartySupplyItemId = null;
-    this.PartySupplyItemList.PackageName = '';
+    this.PartyPaymentList = this.PartyPaymentListAll;
+    this.PartyPaymentList.PartyPaymentId = null;
+    this.PartyPaymentList.PackageName = '';
   }
-
 
 }

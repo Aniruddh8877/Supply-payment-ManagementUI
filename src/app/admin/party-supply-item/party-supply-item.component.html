@@ -49,22 +49,24 @@
                 <th>Particular</th>
                 <th>Remarks</th>
                 <th>Amount</th>
+                <th *ngIf="action.CanEdit">Edit</th>
+                <!-- <th>CreditAmount</th> -->
 
                 <!-- <th style="cursor:pointer;" (click)="sort('Status')">Status</th> -->
-                <th *ngIf="action.CanEdit">Edit</th>
-                <th *ngIf="action.CanDelete">Delete</th>
+                <!-- <th *ngIf="action.CanDelete">Delete</th> -->
               </tr>
             </thead>
             <tbody>
               <tr
                 *ngFor="let item of PartySupplyItemList| filter : Search| orderBy : sortKey : reverse| paginate : { itemsPerPage: itemPerPage, currentPage: p };let i = index ">
                 <td>{{ itemPerPage * (p - 1) + i + 1 }}</td>
-                <td>{{ item.SupplyDate }}</td>
+                <td>{{ item.SupplyDate | date:"dd-MM-yy"}}</td>
                 <td>{{item.PartyName}}</td>
-                <td>{{item.Invoice}}</td>
+                <td>{{item.InvoiceNo}}</td>
                 <td>{{item.Particular}}</td>
                 <td>{{item.Remarks}}</td>
                 <td>{{item.Amount}}</td>
+                <!-- // <td>{{item.CreditAmount}}</td> -->
 
                 <td>
                   <span class="p-1" [ngClass]="
@@ -82,11 +84,11 @@
                     <i class="bi bi-pencil-square"></i>
                   </button>
                 </td>
-                <td *ngIf="action.CanDelete">
+                <!-- <td *ngIf="action.CanDelete">
                   <button class="btn btn-sm btn-danger" (click)="deletePartySupplyItem(item)">
                     <i class="bi bi-trash-fill"></i>
                   </button>
-                </td>
+                </td> -->
               </tr>
             </tbody>
           </table>

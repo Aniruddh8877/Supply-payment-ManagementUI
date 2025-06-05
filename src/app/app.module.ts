@@ -42,6 +42,8 @@ import { LocationComponent } from './admin/location/location.component';
 import { CreditsDetailsComponent } from './admin/credits-details/credits-details.component';
 import { OpeningBalanceComponent } from './admin/opening-balance/opening-balance.component';
 import { PartySupplyItemComponent } from './admin/party-supply-item/party-supply-item.component';
+import { PartyPaymentComponent } from './admin/party-payment/party-payment.component';
+import { PartyLadgerHistoryComponent } from './admin/party-ladger-history/party-ladger-history.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +74,9 @@ import { PartySupplyItemComponent } from './admin/party-supply-item/party-supply
     LocationComponent,
     CreditsDetailsComponent,
     OpeningBalanceComponent,
-    PartySupplyItemComponent
+    PartySupplyItemComponent,
+    PartyPaymentComponent,
+    PartyLadgerHistoryComponent
   ],
   imports: [
     BrowserModule,

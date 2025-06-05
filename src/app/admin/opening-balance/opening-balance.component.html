@@ -116,20 +116,20 @@
 
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Party Name</mat-label>
-                  <input matInput name="PartyName" [(ngModel)]="BalanceList.PartyName"
+                  <input matInput name="PartyName" [(ngModel)]="Balance.PartyName"
                     (ngModelChange)="filterPartyList($event)" [matAutocomplete]="autoTransportPartyName"
-                    placeholder="Search By Surgery Package Name" required />
+                    placeholder="Search By Party Name" required />
                   <mat-autocomplete #autoTransportPartyName="matAutocomplete"
                     (optionSelected)="afterPartyNameSelected($event)">
-                    <mat-option *ngFor="let option of PartyList" [value]="option.PartyName">
+                    <mat-option *ngFor="let option of PartyList" [id]="option.PartyId" [value]="option.PartyName">
                       {{ option.PartyName }}
                     </mat-option>
                   </mat-autocomplete>
-                  <button mat-icon-button matSuffix *ngIf="BalanceList.Partyname" color="primary"
+                  <button mat-icon-button matSuffix *ngIf="Balance.Partyname" color="primary"
                     (click)="clearTransportSupplier()">
                     <mat-icon>close</mat-icon>
                   </button>
-                  <mat-error *ngIf="!BalanceList.PartyName">Required field !!</mat-error>
+                  <mat-error *ngIf="!Balance.PartyName">Required field !!</mat-error>
                 </mat-form-field>
 
 
@@ -141,25 +141,34 @@
                 <!-- Debit -->
                 <mat-form-field appearance="outline" class="col-sm-6">
                   <mat-label>Debit</mat-label>
-                  <input matInput name="Debit" [(ngModel)]="BalanceList.Debit" required type="number">
+                  <input matInput name="Debit" [(ngModel)]="Balance.Debit" required type="number">
                   <mat-error>Debit is <strong>required</strong>.</mat-error>
                 </mat-form-field>
 
                 <!-- Credit -->
                 <mat-form-field appearance="outline" class="col-sm-6">
                   <mat-label>Credit</mat-label>
-                  <input matInput name="Credit" [(ngModel)]="BalanceList.Credit" required type="number">
+                  <input matInput name="Credit" [(ngModel)]="Balance.Credit" required type="number">
                   <mat-error>Credit is <strong>required</strong>.</mat-error>
                 </mat-form-field>
 
-                <!-- Opening Date -->
-                <mat-form-field appearance="outline" class="col-lg-6">
-                  <mat-label>Opening Date</mat-label>
-                  <input matInput [matDatepicker]="picker" [(ngModel)]="BalanceList.OpeningDate" name="OpeningDate"
-                    required />
-                  <mat-datepicker-toggle matSuffix [for]="picker" class="small-datepicker-icon"></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-sm-12">
+                                            <mat-label class="text-danger" style="font-size: 18px; color: red;">Opening
+                                                Date</mat-label>
+                                            <input matInput #Openingdate="ngModel" name="Openingdate" class="text-danger"
+                                                 [(ngModel)]="Balance.Openingdate"
+                                                required [matDatepicker]="OpeningdatePicker">
+                                            <mat-datepicker-toggle matIconSuffix
+                                                [for]="OpeningdatePicker"></mat-datepicker-toggle>
+                                            <mat-datepicker #OpeningdatePicker></mat-datepicker>
+                                            <mat-error
+                                                *ngIf="(Openingdate.dirty  || Openingdate.touched) || (Openingdate.invalid && isSubmitted)">
+                                                Opening Date is <strong>required</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+
+
+
 
               </div>
             </div>
@@ -170,7 +179,7 @@
           <button type="button" mat-raised-button color="warn" class="me-2" data-bs-dismiss="modal"
             (click)="resetForm()">Cancel</button>
           <button mat-raised-button color="primary" (click)="saveBalance()">
-            {{ BalanceList.BalanceAccountId > 0 ? 'Update' : 'Submit' }}
+            {{ Balance.BalanceAccountId > 0 ? 'Update' : 'Submit' }}
           </button>
         </div>
       </div>

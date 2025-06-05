@@ -151,8 +151,9 @@ export class PartyDetailComponent {
       return
     }
     this.dataLoading = true;
-    this.Party.CreatedBy = this.staffLogin.StaffId;
-    this.Party.CreatedOn = new Date();
+    this.Party.CreatedBy = this.staffLogin.StaffLoginId;
+    this.Party.UpdatedBy = this.staffLogin.StaffLoginId;
+   // this.Party.CreatedOn = new Date();
     var obj: RequestModel = {
       request: this.localService.encrypt(JSON.stringify(this.Party)).toString()
     }
@@ -223,13 +224,14 @@ export class PartyDetailComponent {
   // }
 
   deleteParty(obj: any) {
+    console.log(obj);
+    
     if (confirm('Are your sure you want to delete this recored')) {
       var request: RequestModel = {
         request: this.localService.encrypt(JSON.stringify(obj)).toString(),
       };
       this.dataLoading = true;
-      this.service.deleteParty(request).subscribe(
-        (r1) => {
+      this.service.deleteParty(request).subscribe((r1) => {
           let response = r1 as any;
           if (response.Message == ConstantData.SuccessMessage) {
             this.toastr.success('Record Deleted successfully');
