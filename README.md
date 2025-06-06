@@ -1,27 +1,79 @@
-# PathlogyUI
+# Angular Company Payment & Supply Management System
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.0.
+## 🧾 Project Overview
 
-## Development server
+This is a comprehensive **Company Payment and Supply Management System** built using **Angular**. It facilitates real-time management of company financials, item supply tracking, party opening balances, ledger details, staff/admin modules, and location-wise data segregation.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+This project is ideal for businesses needing a streamlined system to manage company transactions, supplies, and stakeholder records with clear segregation of roles and operations.
 
-## Code scaffolding
+---
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## 🚀 Tech Stack
 
-## Build
+- **Frontend:** Angular 15+
+- **UI Frameworks:** Bootstrap 5, Angular Material, Tailwind CSS
+- **Backend:** ASP.NET Web API (integrated via HTTP services)
+- **Database:** Microsoft SQL Server
+- **Authentication:** Role-based access (Admin/Staff)
+- **Utilities:**  ngx-toastr, Reactive Forms, ngx-pagination
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+---
 
-## Running unit tests
+## 📦 Features
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### 🔐 User Management
+- Admin & Staff roles with secure login
+- Role-based access control
+- Staff creation and management
 
-## Running end-to-end tests
+### 🧾 Party Master
+- Add/update party records
+- Maintain party type and contact details
+- Set and update party opening balances
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### 📘 Ledger Management
+- Real-time Party Ledger updates
+- Debit/Credit transaction tracking
+- Downloadable & printable ledger views
+- Filter by date and transaction type
 
-## Further help
+### 📦 Supply Item Module
+- Add/update items
+- Track supply transactions (inward/outward)
+- View inventory levels
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### 💵 Payment Module
+- Record payments by party
+- View past payment history
+- Support for various payment modes
+- Payment date, amount, and remarks logging
+
+### 📍 Location Master
+- Add/edit location data (City, State, Country)
+- Assign locations to parties and staff
+
+### 📆 Date-wise Reporting
+- Custom date range filtering
+- Generate summary views
+- Export data if needed (CSV, PDF – future scope)
+
+### 📊 Dashboard (Optional)
+- KPIs and visual charts (supply flow, total dues, etc.)
+- Quick actions & status overview
+
+---
+
+## 🛠 Setup Instructions
+
+### Prerequisites
+- Node.js (v16+)
+- Angular CLI (`npm install -g @angular/cli`)
+- .NET Framework/Core backend running (if API required)
+- SQL Server
+
+### Installation
+
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/Aniruddh8877/Supply-payment-ManagementUI.git
+   cd company-management-system
