@@ -11,39 +11,27 @@
                     </ol>
                </nav>
           </div>
-          <div class="col-sm-4">
+          <!-- <div class="col-sm-4">
                <button mat-raised-button class="float-right" color="primary" *ngIf="action.CanCreate"
                     data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="resetForm()">New
                     Location</button>
-          </div>
+          </div> -->
      </div>
      <section class="section dashboard">
           <div class="card">
                <div class="card-body ">
-                    <div class="dataTable-top">
-                         <div class="dataTable-dropdown d-flex">
-                              <select class="dataTable-selector form-select form-select-sm" [(ngModel)]="itemPerPage">
-                                   <option *ngFor="let option of PageSize" [value]="option">{{option}} </option>
-                              </select>
-                              <span class="ms-2">Entries per page</span>
-                         </div>
-                         <div class="dataTable-search">
-                              <input class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
-                                   placeholder="Search..." type="text">
-                         </div>
-                    </div>
-                    <div class="table-container ">
-                         <mat-form-field appearance="outline" class="col-lg-6">
-                              <mat-label>Patient Name / Mobile / UHID</mat-label>
+                    <div class="row">
+                         <mat-form-field appearance="outline" class="col-sm-3">
+                              <mat-label>Party Code / Name / Mobile No.</mat-label>
                               <input matInput name="PartyName" [(ngModel)]="PartyDetalis.PartyName"
                                    (ngModelChange)="filterpatientList($event)"
-                                   [matAutocomplete]="autoTransportPackageCollection" placeholder="Search By PartyName "
+                                   [matAutocomplete]="autoTransportPackageCollection" placeholder="Search By Party Name "
                                    required />
 
                               <mat-autocomplete #autoTransportPackageCollection="matAutocomplete"
                                    (optionSelected)="afterPartySelected($event)">
                                    <mat-option *ngFor="let option of ListParty" [value]="option.PartyName">
-                                        {{ option.PartyName }} / {{ option.PartyCode }} /
+                                       {{ option.PartyCode }} / {{ option.PartyName }} /  
                                         {{ option.MobileNo }}
                                    </mat-option>
                               </mat-autocomplete>
@@ -56,49 +44,61 @@
                               <mat-error *ngIf="!PartyDetalis.PartyName">Required field !!</mat-error>
                          </mat-form-field>
 
-                         <mat-form-field appearance="outline" class="col-lg-3">
+                         <mat-form-field appearance="outline" class="col-sm-2">
                               <mat-label>Party Code</mat-label>
                               <input matInput type="text" name="PartyCode" [(ngModel)]="PartyDetalis.PartyCode" required
                                    readonly="true" />
                          </mat-form-field>
 
-                        
-
-                         <mat-form-field appearance="outline" class="col-lg-3">
+                         <mat-form-field appearance="outline" class="col-sm-2">
                               <mat-label>Mobile No.</mat-label>
                               <input matInput type="text" name="MobileNo" [(ngModel)]="PartyDetalis.MobileNo" required
                                    readonly="true" />
                          </mat-form-field>
 
-                         <mat-form-field appearance="outline" class="col-lg-3">
+                         <!-- <mat-form-field appearance="outline" class="col-sm-2">
                               <mat-label>Address</mat-label>
                               <input matInput type="text" name="MobileNo" [(ngModel)]="PartyDetalis.Address" required
                                    readonly="true" />
-                         </mat-form-field>
+                         </mat-form-field> -->
 
-                         <mat-form-field appearance="outline" class="col-lg-3">
+                         <mat-form-field appearance="outline" class="col-sm-2">
                               <mat-label>Location</mat-label>
                               <input matInput type="text" name="LocationName" [(ngModel)]="PartyDetalis.LocationName"
                                    required readonly="true" />
                          </mat-form-field>
 
-                         <div class="col-sm-4">
-               <button
-                 
-                mat-raised-button class="float-right" color="primary"  >
-                    Search</button>
-                    <!-- add click fundtion to filter Paymentlist -->
-          </div>
+                         <div class="col-sm-2">
+                              <button (click)="GetPartyPaymentDetailList(PartyDetalis.PartyId)" mat-raised-button
+                                   class="float-left" color="primary">
+                                   Search</button>
+                         </div>
+                    </div>
+                    <div class="dataTable-top">
+                         <div class="dataTable-dropdown d-flex">
+                              <select class="dataTable-selector form-select form-select-sm" [(ngModel)]="itemPerPage">
+                                   <option *ngFor="let option of PageSize" [value]="option">{{option}} </option>
+                              </select>
+                              <span class="ms-2">Entries per page</span>
+                         </div>
+                         <div class="dataTable-search">
+                              <input class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
+                                   placeholder="Search..." type="text">
+                         </div>
+                    </div>
+
+                    <div class="table-container ">
+
 
                          <table class="table table-bordered table-hover">
                               <thead>
                                    <tr>
-                                        <th>S.No</th>
-                                        <th>Payment date</th>
-                                        <th>Payment Mode</th>
-                                        <th>Particular</th>
-                                        <th>Debits Amount</th>
-                                        <th>Credits Amount</th>
+                                        <th style="text-align: center;">S.No</th>
+                                        <th style="text-align: center;">Payment Date</th>
+                                        <th style="text-align: left;">Particular's</th>
+                                        <th style="text-align: center;">Payment Mode</th>
+                                        <th style="text-align: right;color: red; font-size: 18px; font-weight: 600;">Debit Amount</th>
+                                        <th style="text-align: right;color: darkgreen; font-size: 18px; font-weight: 600;">Credit Amount</th>
                                         <!-- <th>Party Name</th> -->
 
                                    </tr>
@@ -106,35 +106,31 @@
                               <tbody>
                                    <tr
                                         *ngFor="let item of PartyPaymentDetailList |filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; ; let i = index;">
-                                        <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
-                                        <td>{{item.PaymentDate|date:'dd-MM-YYYY'}}</td>
-                                        <td>{{AllPaymentModeList[item.PaymentMode]}}</td>
-                                        <td>{{item.Particular}}</td>
-                                        <td>{{item.DebitAmount}}</td>
-                                        <td>{{item.CreditAmount}}</td>
+                                        <td style="text-align: center;">{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                        <td style="text-align: center;">{{item.PaymentDate|date:'dd-MM-YYYY'}}</td>
+                                        <td style="text-align: left;">{{item.Particular}}-{{item.InvoiceNo}}</td>
+                                         <td style="text-align: center;">{{AllPaymentModeList[item.PaymentMode]}}</td>
+                                        <td style="text-align: right;color: red; font-size: 18px; font-weight: 600;">{{item.DebitAmount}}</td>
+                                        <td style="text-align: right;color: darkgreen; font-size: 18px; font-weight: 600;">{{item.CreditAmount}}</td>
                                         <!-- <td>{{item.PartyName}}</td> -->
                                    </tr>
                               </tbody>
                               <tfoot>
-                                   <th></th>
-                                   <th></th>
-                                   <th></th>
-                                   <th>Balance Due</th>
-                                   <th>Calculate karna Parega</th>
-                                   <th></th>
+                                   
 
-
+                                   <!-- Totals Row -->
+                                   <tr>
+                                        <td colspan="4" class="text-end fw-bold"><span style="font-size: 18px; font-weight: 600;">Total</span></td>
+                                        <td style="text-align: right;"><span style="text-align: right; font-size: 18px; font-weight: 600;">{{ CreditDebitAmt.Debit }}</span></td>
+                                        <td style="text-align: right;"> <span style="text-align: right; font-size: 18px; font-weight: 600;">{{ CreditDebitAmt.Credit }}</span> </td>
+                                   </tr>
+                                   <tr>
+                                        <td colspan="4" class="text-end fw-bold"><span style="font-size: 18px; font-weight: 600;">Balance Due</span></td>
+                                        <td style="text-align: right;"><span style="font-size: 18px;color: red; font-weight: 600;">{{ CreditDebitAmt.Due }}</span></td>
+                                        <td></td>
+                                   </tr>
                               </tfoot>
-                              <tfoot>
-                                   <th></th>
-                                   <th></th>
-                                   <th></th>
-                                   <th class="content-left">Total =</th>
-                                   <th>abhi nhi pata</th>
-                                   <th>abhi nhi pata</th>
 
-                              </tfoot>
-                              <br>
                          </table>
                     </div>
                     <div class="dataTable-bottom">

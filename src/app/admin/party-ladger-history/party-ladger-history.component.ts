@@ -44,6 +44,7 @@ export class PartyLadgerHistoryComponent {
   filterModel: any;
   AmountPaymentStatusList: any;
   PartyDetalis: any = {};
+  CreditDebitAmt: any={};
 
   sort(key: any) {
     this.sortKey = key;
@@ -112,17 +113,22 @@ export class PartyLadgerHistoryComponent {
 
 
 
-  GetPartyPaymentDetailList() {
+  GetPartyPaymentDetailList(PartyId:any) {
     var obj: RequestModel = {
-      request: this.localService.encrypt(JSON.stringify({})).toString()
+      request: this.localService.encrypt(JSON.stringify({PartyId})).toString()
     }
     this.dataLoading = true
     this.service.GetPartyPaymentDetailList(obj).subscribe(r1 => {
       let response = r1 as any
       if (response.Message == ConstantData.SuccessMessage) {
         this.PartyPaymentDetailList = response.PartyPaymentDetailList;
+        this.CreditDebitAmt.Debit = response.DebitAmount;
+        this.CreditDebitAmt.Credit = response.CreditAmount;
+        this.CreditDebitAmt.Due = this.CreditDebitAmt.Debit - this.CreditDebitAmt.Credit ;
+        
+
+        
         this.filterState = this.StateList;
-        // console.log("this is location list for location", this.PartyPaymentDetailList);
       } else {
         this.toastr.error(response.Message)
       }

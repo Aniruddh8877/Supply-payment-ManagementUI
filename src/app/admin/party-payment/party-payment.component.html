@@ -22,7 +22,7 @@
   </div>
 
 
-<section class="section dashboard">
+  <section class="section dashboard">
     <div class="card">
       <div class="card-body">
         <div class="dataTable-top">
@@ -104,7 +104,7 @@
                   </button>
                 </td> -->
               </tr>
-             
+
             </tbody>
           </table>
         </div>
@@ -134,9 +134,9 @@
               <div class="row">
 
 
-                
 
-                
+
+
 
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Party Name</mat-label>
@@ -156,6 +156,22 @@
                   <mat-error *ngIf="!PartyPayment.PartyName">Required field !!</mat-error>
                 </mat-form-field>
 
+                <mat-form-field appearance="outline" class="col-sm-12">
+                  <mat-label>Particular</mat-label>
+                  <input matInput #Particular="ngModel" rows="5" name="Particular" [(ngModel)]="PartyPayment.Particular"
+                    autofocus />
+                </mat-form-field>
+
+
+
+                <mat-form-field appearance="outline" class="col-sm-6">
+                  <mat-label>Amount</mat-label>
+                  <input type="number" matInput #Amount="ngModel" name="Amount" [(ngModel)]="PartyPayment.Amount" required
+                    autofocus />
+                  <mat-error>
+                    Amount is <strong>required.</strong>
+                  </mat-error>
+                </mat-form-field>
 
                 <mat-form-field appearance="outline" class="col-lg-6">
                   <mat-label>Payment Date</mat-label>
@@ -165,42 +181,26 @@
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" class="col-sm-6">
-                  <mat-label>Amount</mat-label>
-                  <input matInput #Amount="ngModel" name="Amount" [(ngModel)]="PartyPayment.Amount" required
-                    autofocus />
-                  <mat-error>
-                    Amount is <strong>required.</strong>
-                  </mat-error>
-                </mat-form-field>
 
 
-
-                <mat-form-field appearance="outline" class="col-sm-12">
-                  <mat-label>Particular</mat-label>
-                  <input matInput #Particular="ngModel" rows="5" name="Particular"
-                    [(ngModel)]="PartyPayment.Particular" required autofocus/>
-                  <mat-error>
-                    Particular is <strong>required.</strong>
-                  </mat-error>
-                </mat-form-field>
-
-                 <mat-form-field appearance="outline" class="col-md-6 custom-mat-form-field">
+                <mat-form-field appearance="outline" class="col-md-6 custom-mat-form-field">
                   <mat-label>Payment Mode</mat-label>
                   <mat-select name="PaymentMode" [(ngModel)]="PartyPayment.PaymentMode" required>
-                    <mat-option [value]="PaymentMode.Key" *ngFor="let PaymentMode of PaymentModeList">{{PaymentMode.Value}}</mat-option>
+                    <mat-option [value]="PaymentMode.Key"
+                      *ngFor="let PaymentMode of PaymentModeList">{{PaymentMode.Value}}</mat-option>
                   </mat-select>
                   <mat-error>Required Field !!</mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="col-sm-6" *ngIf="PartyPayment.PaymentMode == 2">
                   <mat-label>Transaction No.</mat-label>
-                  <input matInput #TransactionNo="ngModel" name="TransactionNo" [(ngModel)]="PartyPayment.TransactionNo"/>
+                  <input matInput #TransactionNo="ngModel" name="TransactionNo"
+                    [(ngModel)]="PartyPayment.TransactionNo" />
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="col-sm-6" *ngIf="PartyPayment.PaymentMode == 3">
                   <mat-label>Cheque No.</mat-label>
-                  <input matInput #ChequeNo="ngModel" name="ChequeNo" [(ngModel)]="PartyPayment.ChequeNo"/>
+                  <input matInput #ChequeNo="ngModel" name="ChequeNo" [(ngModel)]="PartyPayment.ChequeNo" />
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="col-lg-6" *ngIf="PartyPayment.PaymentMode ==3">
@@ -218,19 +218,19 @@
 
                 <mat-form-field appearance="outline" class="col-sm-6" *ngIf="PartyPayment.PaymentMode == 3">
                   <mat-label>Bank Name</mat-label>
-                  <input matInput #BankName="ngModel" name="BankName" [(ngModel)]="PartyPayment.BankName"/>
+                  <input matInput #BankName="ngModel" name="BankName" [(ngModel)]="PartyPayment.BankName" />
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="col-sm-6" *ngIf="PartyPayment.PaymentMode == 3">
                   <mat-label>Branch Name</mat-label>
-                  <input matInput #BranchName="ngModel" name="BranchName" [(ngModel)]="PartyPayment.BranchName"/>
+                  <input matInput #BranchName="ngModel" name="BranchName" [(ngModel)]="PartyPayment.BranchName" />
                 </mat-form-field>
 
 
                 <mat-form-field appearance="outline" class="col-sm-6" *ngIf="PartyPayment.PaymentMode == 5">
                   <mat-label>DD No.</mat-label>
-                  <input matInput #DDNo="ngModel" name="DDNo" [(ngModel)]="PartyPayment.DDNo"/>
-                </mat-form-field>                                                                                                 
+                  <input matInput #DDNo="ngModel" name="DDNo" [(ngModel)]="PartyPayment.DDNo" />
+                </mat-form-field>
 
                 <mat-form-field appearance="outline" class="col-sm-12">
                   <mat-label>Remarks</mat-label>
@@ -262,4 +262,4 @@
     </div>
   </div>
 
-  </main>
+</main>

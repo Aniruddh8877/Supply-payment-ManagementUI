@@ -10,7 +10,7 @@
                         <div class="card mb-3">
                             <div class="card-header" style="color: darkblue;">
                                 <div class="d-flex justify-content-center">
-                                    <img [src]="imageUrl + Company.LogoPNG" alt="" style="height: 150px;">
+                                    <img [src]="imageUrl + Company.LogoPNG" alt="" style="width: 350px;">
                                 </div>
                                 <!-- <h4 class="text-center mt-2">{{Company.CompanyName}}</h4> -->
                                 <!-- <label *ngIf="Company.CompanyAddress">{{Company.CompanyAddress}}</label> -->
@@ -20,14 +20,14 @@
 
                             <div class="card-body" style="padding-bottom: 22px;">
 
-                                <div class="pb-2">
-                                    <h5 class="card-title text-center pb-0 fs-4" style="padding-bottom: 0 !important;">
+                                <div style="padding-bottom: 10px;">
+                                    <h5 class="card-title text-center pb-0 fs-4" style="padding-bottom: 0 !important;padding-top: 0 !important;">
                                         Login to Your Account</h5>
                                     <p class="text-center small">Enter your username & password to login</p>
                                 </div>
 
                                 <form #myForm="ngForm" class="row g-3 needs-validation" novalidate>
-
+                                   <div class="row">    
                                     <div class="col-12">
                                         <label for="yourUsername" class="form-label">Username</label>
                                         <mat-form-field appearance="outline" class="w-100">
@@ -78,6 +78,7 @@
                                         <p class="small mb-0">Don't have account? <a>Create
                                                 an account</a></p>
                                     </div> -->
+                                </div> 
                                 </form>
 
                             </div>
