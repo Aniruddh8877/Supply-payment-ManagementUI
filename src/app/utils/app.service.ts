@@ -82,6 +82,13 @@ export class AppService {
   GetPartyPaymentDetailList(obj:any){
     return this.http.post(this.apiUrl+"PartyPaymentDetail/PartyPaymentDetailList",obj,{headers:this.headers})
   }
+
+
+  //
+
+  PartyLadgerHistory(obj:any){
+    window.open(this.baseUrl+"report/PartyLadgerHistory/"+obj);
+  }
   // District
   getDistrictList(obj: any) {
     return this.http.post(this.apiUrl + "District/DistrictList", obj, { headers: this.headers })

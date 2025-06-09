@@ -25,13 +25,13 @@
                               <mat-label>Party Code / Name / Mobile No.</mat-label>
                               <input matInput name="PartyName" [(ngModel)]="PartyDetalis.PartyName"
                                    (ngModelChange)="filterpatientList($event)"
-                                   [matAutocomplete]="autoTransportPackageCollection" placeholder="Search By Party Name "
-                                   required />
+                                   [matAutocomplete]="autoTransportPackageCollection"
+                                   placeholder="Search By Party Name " required />
 
                               <mat-autocomplete #autoTransportPackageCollection="matAutocomplete"
                                    (optionSelected)="afterPartySelected($event)">
                                    <mat-option *ngFor="let option of ListParty" [value]="option.PartyName">
-                                       {{ option.PartyCode }} / {{ option.PartyName }} /  
+                                        {{ option.PartyCode }} / {{ option.PartyName }} /
                                         {{ option.MobileNo }}
                                    </mat-option>
                               </mat-autocomplete>
@@ -97,8 +97,11 @@
                                         <th style="text-align: center;">Payment Date</th>
                                         <th style="text-align: left;">Particular's</th>
                                         <th style="text-align: center;">Payment Mode</th>
-                                        <th style="text-align: right;color: red; font-size: 18px; font-weight: 600;">Debit Amount</th>
-                                        <th style="text-align: right;color: darkgreen; font-size: 18px; font-weight: 600;">Credit Amount</th>
+                                        <th style="text-align: right;color: red; font-size: 18px; font-weight: 600;">
+                                             Debit Amount</th>
+                                        <th
+                                             style="text-align: right;color: darkgreen; font-size: 18px; font-weight: 600;">
+                                             Credit Amount</th>
                                         <!-- <th>Party Name</th> -->
 
                                    </tr>
@@ -109,25 +112,40 @@
                                         <td style="text-align: center;">{{(itemPerPage * (p -1)) +i+ 1}}</td>
                                         <td style="text-align: center;">{{item.PaymentDate|date:'dd-MM-YYYY'}}</td>
                                         <td style="text-align: left;">{{item.Particular}}-{{item.InvoiceNo}}</td>
-                                         <td style="text-align: center;">{{AllPaymentModeList[item.PaymentMode]}}</td>
-                                        <td style="text-align: right;color: red; font-size: 18px; font-weight: 600;">{{item.DebitAmount}}</td>
-                                        <td style="text-align: right;color: darkgreen; font-size: 18px; font-weight: 600;">{{item.CreditAmount}}</td>
+                                        <td style="text-align: center;">{{AllPaymentModeList[item.PaymentMode]}}</td>
+                                        <td style="text-align: right;color: red; font-size: 18px; font-weight: 600;">
+                                             {{item.DebitAmount}}</td>
+                                        <td
+                                             style="text-align: right;color: darkgreen; font-size: 18px; font-weight: 600;">
+                                             {{item.CreditAmount}}</td>
                                         <!-- <td>{{item.PartyName}}</td> -->
                                    </tr>
                               </tbody>
                               <tfoot>
-                                   
+
 
                                    <!-- Totals Row -->
                                    <tr>
-                                        <td colspan="4" class="text-end fw-bold"><span style="font-size: 18px; font-weight: 600;">Total</span></td>
-                                        <td style="text-align: right;"><span style="text-align: right; font-size: 18px; font-weight: 600;">{{ CreditDebitAmt.Debit }}</span></td>
-                                        <td style="text-align: right;"> <span style="text-align: right; font-size: 18px; font-weight: 600;">{{ CreditDebitAmt.Credit }}</span> </td>
+                                        <td colspan="4" class="text-end fw-bold"><span
+                                                  style="font-size: 18px; font-weight: 600;">Total</span></td>
+                                        <td style="text-align: right;"><span
+                                                  style="text-align: right; font-size: 18px; font-weight: 600;">{{
+                                                  CreditDebitAmt.Debit }}</span></td>
+                                        <td style="text-align: right;"> <span
+                                                  style="text-align: right; font-size: 18px; font-weight: 600;">{{
+                                                  CreditDebitAmt.Credit }}</span> </td>
                                    </tr>
                                    <tr>
-                                        <td colspan="4" class="text-end fw-bold"><span style="font-size: 18px; font-weight: 600;">Balance Due</span></td>
-                                        <td style="text-align: right;"><span style="font-size: 18px;color: red; font-weight: 600;">{{ CreditDebitAmt.Due }}</span></td>
-                                        <td></td>
+                                        <td colspan="4" class="text-end fw-bold"><span
+                                                  style="font-size: 18px; font-weight: 600;">Balance Due</span></td>
+                                        <td style="text-align: right;"><span
+                                                  style="font-size: 18px;color: red; font-weight: 600;">{{
+                                                  CreditDebitAmt.Due }}</span></td>
+                                        <td style="text-align: right;">
+                                        
+                                             <button (click)="PartyLadgerHistory(PartyDetalis)" style="font-size: large; display: flex; justify-content: center; align-items: center; border-radius:30px;width: 100% ; height: 100%;">Print</button>
+                                        </td>
+
                                    </tr>
                               </tfoot>
 

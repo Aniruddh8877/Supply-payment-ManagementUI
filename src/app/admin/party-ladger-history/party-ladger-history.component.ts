@@ -210,7 +210,14 @@ export class PartyLadgerHistoryComponent {
 //   };
 // }
 
-
+PartyLadgerHistory(data: any) {
+  if (data && data.PartyId && !isNaN(Number(data.PartyId))) {
+    this.service.PartyLadgerHistory(Number(data.PartyId));
+  } else {
+    
+    this.toastr.error("Please choose atleast one Party Ladger ");
+  }
+}
 
 
 }
