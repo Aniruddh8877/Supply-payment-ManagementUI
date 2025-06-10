@@ -87,14 +87,17 @@
                                              item.TotalCreditAmount | number:'1.0-0'}}</td>
                                    </tr>
                               </tbody>
-                              <tfoot>
-                                   <th></th>
-                                   <th></th>
-                                   <th>Total</th>
-                                   <th>TotalDebitAmount</th>
-                                   <th>TotalCreditAmount</th>
-                                   <th>ToatalBalanceDue</th>
-                              </tfoot>
+                             <tfoot>
+  <tr>
+    <th></th>
+    <th></th>
+    <th style="text-align: center;">Total</th>
+    <th style="text-align: right; color: red;">{{ AllDebitAmount | number:'1.0-0' }}</th>
+    <th style="text-align: right; color: darkgreen;">{{ AllCreditAmount | number:'1.0-0' }}</th>
+    <th style="text-align: right; color: red; font-weight: 600;">{{ AllBalanceDue | number:'1.0-0' }}</th>
+  </tr>
+</tfoot>
+
                          </table>
                     </div>
                     <div class="dataTable-bottom">

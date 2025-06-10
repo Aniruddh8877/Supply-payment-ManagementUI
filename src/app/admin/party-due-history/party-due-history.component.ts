@@ -36,9 +36,9 @@ export class PartyDueHistoryComponent {
   StateList: any[] = [];
   filterState: any[] = [];
   StatusList = this.loadData.GetEnumList(Status);
-  LocationList:any= [];
+  LocationList: any = [];
   selectedLocationId: number = 0;
-selectedLocationName: string = '';
+  selectedLocationName: string = '';
 
 
 
@@ -113,47 +113,53 @@ selectedLocationName: string = '';
     this.PartyDueHistory.PaymentDetailId = event.option.id;
   }
 
+  AllCreditAmount: any = {};
+  AllDebitAmount: any = {};
+  AllBalanceDue: any = {};
 
-GetParyDueHistorylist(locationId?: number) {
-  let filterObj: any = {};
-  if (locationId && locationId > 0) {
-    filterObj.LocationId = locationId;
-  }
-  const obj: RequestModel = {
-    request: this.localService.encrypt(JSON.stringify(filterObj)).toString()
-  };
-  this.dataLoading = true;
-  this.service.GetParyDueHistorylist(obj).subscribe(
-    (r1) => {
-      const response = r1 as any;
-      if (response.Message === ConstantData.SuccessMessage) {
-        this.PartyDueHistoryList = response.PartyDueHistoryList;
-        this.filterState = this.StateList;
-        console.log(this.PartyDueHistoryList);
-      } else {
-        this.toastr.error(response.Message);
-      }
-      this.dataLoading = false;
-    },
-    (err) => {
-      this.toastr.error("Error while fetching records");
-      this.dataLoading = false;
+  GetParyDueHistorylist(locationId?: number) {
+    let filterObj: any = {};
+    if (locationId && locationId > 0) {
+      filterObj.LocationId = locationId;
     }
-  );
-}
+    const obj: RequestModel = {
+      request: this.localService.encrypt(JSON.stringify(filterObj)).toString()
+    };
+    this.dataLoading = true;
+    this.service.GetParyDueHistorylist(obj).subscribe(
+      (r1) => {
+        const response = r1 as any;
+        if (response.Message === ConstantData.SuccessMessage) {
+          this.PartyDueHistoryList = response.PartyDueHistoryList;
+          this.AllCreditAmount = response.AllCreditAmount;
+          this.AllDebitAmount = response.AllDebitAmount;
+          this.AllBalanceDue = response.AllBalanceDue;
+          this.filterState = this.StateList;
+          console.log(this.PartyDueHistoryList);
+        } else {
+          this.toastr.error(response.Message);
+        }
+        this.dataLoading = false;
+      },
+      (err) => {
+        this.toastr.error("Error while fetching records");
+        this.dataLoading = false;
+      }
+    );
+  }
 
 
-clearParty() {
-  this.selectedLocationId = 0;
-  this.selectedLocationName = '';
-  this.GetParyDueHistorylist(); // fetch all data
-}
+  clearParty() {
+    this.selectedLocationId = 0;
+    this.selectedLocationName = '';
+    this.GetParyDueHistorylist(); // fetch all data
+  }
 
 
 
- getLocationList(data:any) {
+  getLocationList(data: any) {
     var obj: RequestModel = {
-      request: this.localService.encrypt(JSON.stringify({data})).toString()
+      request: this.localService.encrypt(JSON.stringify({ data })).toString()
     }
     this.dataLoading = true
     this.service.getLocationList(obj).subscribe(r1 => {
@@ -161,7 +167,7 @@ clearParty() {
       if (response.Message == ConstantData.SuccessMessage) {
         this.LocationList = response.LocationList;
         this.filterState = this.StateList;
-        console.log("this is location list for location",this.LocationList);
+        console.log("this is location list for location", this.LocationList);
       } else {
         this.toastr.error(response.Message)
       }
@@ -174,10 +180,10 @@ clearParty() {
 
 
 
-onLocationChange(name: string) {
-  const selected = this.LocationList.find((loc: any) => loc.LocationName === name);
-  this.selectedLocationId = selected ? selected.LocationId : 0;
-}
+  onLocationChange(name: string) {
+    const selected = this.LocationList.find((loc: any) => loc.LocationName === name);
+    this.selectedLocationId = selected ? selected.LocationId : 0;
+  }
 
 
 
