@@ -24,6 +24,7 @@ import { OpeningBalanceComponent } from './admin/opening-balance/opening-balance
 import { PartySupplyItemComponent } from './admin/party-supply-item/party-supply-item.component';
 import { PartyPaymentComponent } from './admin/party-payment/party-payment.component';
 import { PartyLadgerHistoryComponent } from './admin/party-ladger-history/party-ladger-history.component';
+import { PartyDueHistoryComponent } from './admin/party-due-history/party-due-history.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/admin-login', pathMatch: 'full' },
@@ -53,7 +54,8 @@ const routes: Routes = [
       { path: 'opening-balance', component: OpeningBalanceComponent },
       { path: 'PartySupplyItem', component: PartySupplyItemComponent },
       { path: 'PartyPayment', component: PartyPaymentComponent },
-      { path: 'PartyLadgerHistory', component: PartyLadgerHistoryComponent }
+      { path: 'PartyLadgerHistory', component: PartyLadgerHistoryComponent },
+      {path:'PartyDueHistory',component:PartyDueHistoryComponent}
     ],
   },
   { path: 'page-not-found', component: PageNotFoundComponent },

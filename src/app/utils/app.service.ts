@@ -83,6 +83,10 @@ export class AppService {
     return this.http.post(this.apiUrl+"PartyPaymentDetail/PartyPaymentDetailList",obj,{headers:this.headers})
   }
 
+  GetParyDueHistorylist(obj:any){
+    return this.http.post(this.apiUrl+"PartyPaymentDetail/PartyDueHistoryList",obj,{headers:this.headers})
+  }
+
 
   //
 
