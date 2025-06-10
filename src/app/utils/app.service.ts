@@ -87,6 +87,14 @@ export class AppService {
     return this.http.post(this.apiUrl+"PartyPaymentDetail/PartyDueHistoryList",obj,{headers:this.headers})
   }
 
+//Dashboard
+
+getDashboardSummary(obj:any){
+  return this.http.post(this.apiUrl+"Dashboard/DashboardSummary",obj,{headers:this.headers})
+}
+
+
+
 
   //
 
