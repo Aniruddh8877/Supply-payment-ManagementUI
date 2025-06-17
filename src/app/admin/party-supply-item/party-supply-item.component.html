@@ -103,7 +103,7 @@
 
   <div *ngIf="action.CanEdit || action.CanCreate" class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
     data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="staticBackdropLabel">
@@ -119,37 +119,7 @@
               <div class="row">
 
 
-                <mat-form-field appearance="outline" class="col-lg-6">
-                  <mat-label>Supply Date</mat-label>
-                  <input matInput [matDatepicker]="picker" [(ngModel)]="PartySupplyItem.SupplyDate" name="SupplyDate"
-                    required />
-                  <mat-datepicker-toggle matSuffix [for]="picker" class="small-datepicker-icon"></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
-
-
-                <mat-form-field appearance="outline" class="col-sm-6">
-                  <mat-label>Invoice No. </mat-label>
-                  <input matInput #Invoice="ngModel" name="InvoiceNo" [(ngModel)]="PartySupplyItem.InvoiceNo" required
-                    autofocus />
-                  <mat-error>
-                    Invoice No. is <strong>required.</strong>
-                  </mat-error>
-                </mat-form-field>
-
-
-
-
-                <!-- <mat-form-field appearance="outline" class="col-sm-12">
-                  <mat-label>Party Name</mat-label>
-                  <input matInput #PartyName="ngModel" name="PartyName" [(ngModel)]="PartySupplyItem.PartyName" required
-                    autofocus />
-                  <mat-error>
-                    Party Name is <strong>required.</strong>
-                  </mat-error>
-                </mat-form-field> -->
-
-                <mat-form-field appearance="outline" class="full-width">
+                <mat-form-field appearance="outline" class="col-sm-4">
                   <mat-label>Party Name</mat-label>
                   <input matInput name="PartyName" [(ngModel)]="PartySupplyItemList.PartyName"
                     (ngModelChange)="filterPartySupplyItemList($event)" [matAutocomplete]="autoTransportPartyName"
@@ -167,20 +137,165 @@
                   <mat-error *ngIf="!PartySupplyItemList.PartyName">Required field !!</mat-error>
                 </mat-form-field>
 
+                <mat-form-field appearance="outline" class="col-lg-4">
+                  <mat-label>Supply Date</mat-label>
+                  <input matInput [matDatepicker]="picker" [(ngModel)]="PartySupplyItem.SupplyDate" name="SupplyDate"
+                    required />
+                  <mat-datepicker-toggle matSuffix [for]="picker" class="small-datepicker-icon"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
 
-                <mat-form-field appearance="outline" class="col-sm-12">
-                  <mat-label>Particular</mat-label>
-                  <textarea matInput #Particular="ngModel" rows="5" name="Particular"
-                    [(ngModel)]="PartySupplyItem.Particular" required autofocus></textarea>
+
+                <mat-form-field appearance="outline" class="col-sm-4">
+                  <mat-label>Invoice No. </mat-label>
+                  <input matInput #Invoice="ngModel" name="InvoiceNo" [(ngModel)]="PartySupplyItem.InvoiceNo" required
+                    autofocus />
                   <mat-error>
-                    Particular is <strong>required.</strong>
+                    Invoice No. is <strong>required.</strong>
                   </mat-error>
                 </mat-form-field>
 
 
 
 
-                <mat-form-field appearance="outline" class="col-sm-12">
+
+                <div class="card-body">
+                  <h5 class="card-title">Add Product</h5>
+
+                  <!-- Product Section Strart -->
+                  <form class="row g-3">
+
+                    <!-- Product category Name -->
+                    <mat-form-field appearance="outline" class="col-lg-3">
+                      <mat-label>Product category </mat-label>
+                      <input matInput name="ProductCategoryName" [(ngModel)]="Product.ProductCategoryName"
+                        (ngModelChange)="filterpackageList($event)" [matAutocomplete]="autoProductCategory"
+                        placeholder="Search By Product Category Name " required />
+
+                      <mat-autocomplete #autoProductCategory="matAutocomplete"
+                        (optionSelected)="afterPackageSelected($event)">
+                        <mat-option *ngFor="let opt of filteredPackageList" [value]="opt.ProductCategoryName">
+                          {{ opt.ProductCategoryName }}
+                        </mat-option>
+                      </mat-autocomplete>
+
+                      <button mat-icon-button matSuffix *ngIf="Product.ProductCategoryName" color="primary"
+                        (click)="PackageClear()">
+                        <mat-icon>close</mat-icon>
+                      </button>
+
+                      <mat-error *ngIf="!Product.ProductCategoryName">Required field !!</mat-error>
+                    </mat-form-field>
+
+
+                    <!-- Product Name -->
+                    <mat-form-field appearance="outline" class="col-lg-3">
+                      <mat-label>Product Name </mat-label>
+                      <input matInput name="ProductItemName" [(ngModel)]="Product.ProductItemName"
+                        (ngModelChange)="filterProductList($event)" [matAutocomplete]="autoProductItemName"
+                        placeholder="Search By Product Category Name " required />
+
+                      <mat-autocomplete #autoProductItemName="matAutocomplete"
+                        (optionSelected)="afterProductSelected($event)">
+                        <mat-option *ngFor="let opt of filteredProductList" [value]="opt.ProductName">
+                          {{ opt.ProductName }}
+                        </mat-option>
+                      </mat-autocomplete>
+
+                      <button mat-icon-button matSuffix *ngIf="Product.ProductName" color="primary"
+                        (click)="PackageClear()">
+                        <mat-icon>close</mat-icon>
+                      </button>
+
+                      <mat-error *ngIf="!Product.ProductCategoryName">Required field !!</mat-error>
+                    </mat-form-field>
+
+                    <!-- Product Size -->
+                    <mat-form-field appearance="outline" class="col-lg-2">
+                      <mat-label>Product Size </mat-label>
+                      <input matInput name="Package" [(ngModel)]="Product.ProductSizeName"
+                        (ngModelChange)="filterProductSizeList($event)" [matAutocomplete]="autoProductSizeName"
+                        placeholder="Search By Product Category Name " required />
+
+                      <mat-autocomplete #autoProductSizeName="matAutocomplete"
+                        (optionSelected)="afterProductSizeSelected($event)">
+                        <mat-option *ngFor="let opt of filteredProductSizeList" [value]="opt.ProductSizeName">
+                          {{ opt.ProductSizeName }}
+                        </mat-option>
+                      </mat-autocomplete>
+
+                      <button mat-icon-button matSuffix *ngIf="Product.ProductSizeName" color="primary"
+                        (click)="PackageClear()">
+                        <mat-icon>close</mat-icon>
+                      </button>
+
+                      <mat-error *ngIf="!Product.ProductSizeName">Required field !!</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="col-sm-2">
+                      <mat-label>Qty.</mat-label>
+                      <input matInput #Quantity="ngModel" name="Quantity" [(ngModel)]="Product.Quantity"
+                        required autofocus />
+                      <mat-error>
+                        Quantity is <strong>required.</strong>
+                      </mat-error>
+                    </mat-form-field>
+
+                    <button mat-raised-button color="primary"(click)="addProductItem()" class="col-sm-2"> Add </button>
+<a class="list-group-item list-group-item-action" *ngIf="SelectProductItemList.length > 0">
+                <div class="row">
+                  <div class="col-sm-19 table-responsive">
+                    <table class="table table-bordered table-hover table-lg" id="table_list">
+                      <thead class="thead-light">
+                        <tr>
+                          <th>#</th>
+                          <th>Product Category Name</th>
+                          <th>Product Item Name</th>
+                          <th>Product Size Name</th>
+                          <th>Quantity</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr *ngFor="
+                            let model of SelectProductItemList;
+                            let i = index
+                          ">
+                          <td>{{ i + 1 }}</td>
+
+                          <td>
+                            {{ model.ProductCategoryName }}
+                          </td>
+                          <td>
+                            {{ model.ProductItemName }}
+                          </td>
+                          <td>
+                            {{ model.ProductSizeName }}
+                          </td>
+                          <td>
+                            {{ model.Quantity }}
+                          </td>
+
+                          <td>
+                            <button (onChange)="addProductItem()" (click)="RemoveProduct(i)"
+                              class="btn btn-sm btn-danger">
+                              <i class="bi bi-trash-fill"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </a>
+                  </form>
+                  <!-- Product Section End -->
+                </div>
+
+
+
+
+                <mat-form-field appearance="outline" class="col-sm-4">
                   <mat-label>Amount</mat-label>
                   <input matInput #Amount="ngModel" name="Amount" [(ngModel)]="PartySupplyItem.Amount" required
                     autofocus />
@@ -189,13 +304,12 @@
                   </mat-error>
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" class="col-sm-12">
+                <mat-form-field appearance="outline" class="col-sm-4">
                   <mat-label>Remarks</mat-label>
-                  <input matInput #Remarks="ngModel" name="Remarks" [(ngModel)]="PartySupplyItem.Remarks" 
-                    autofocus />
+                  <input matInput #Remarks="ngModel" name="Remarks" [(ngModel)]="PartySupplyItem.Remarks" autofocus />
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" class="col-md-6 custom-mat-form-field">
+                <mat-form-field appearance="outline" class="col-md-4 custom-mat-form-field">
                   <mat-label>Status</mat-label>
                   <mat-select name="Status" [(ngModel)]="PartySupplyItem.Status" required>
                     <mat-option [value]="status.Key" *ngFor="let status of StatusList">{{status.Value}}</mat-option>

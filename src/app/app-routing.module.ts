@@ -25,6 +25,9 @@ import { PartySupplyItemComponent } from './admin/party-supply-item/party-supply
 import { PartyPaymentComponent } from './admin/party-payment/party-payment.component';
 import { PartyLadgerHistoryComponent } from './admin/party-ladger-history/party-ladger-history.component';
 import { PartyDueHistoryComponent } from './admin/party-due-history/party-due-history.component';
+import { ProductCategoryComponent } from './admin/product-category/product-category.component';
+import { ProductSizeComponent } from './admin/product-size/product-size.component';
+import { ProductComponent } from './admin/product/product.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/admin-login', pathMatch: 'full' },
@@ -55,7 +58,10 @@ const routes: Routes = [
       { path: 'PartySupplyItem', component: PartySupplyItemComponent },
       { path: 'PartyPayment', component: PartyPaymentComponent },
       { path: 'PartyLadgerHistory', component: PartyLadgerHistoryComponent },
-      {path:'PartyDueHistory',component:PartyDueHistoryComponent}
+      { path: 'PartyDueHistory', component: PartyDueHistoryComponent },
+      { path: 'ProductCategory', component: ProductCategoryComponent },
+      { path: 'ProductSize', component: ProductSizeComponent },
+      {path: 'Product',component:ProductComponent}
     ],
   },
   { path: 'page-not-found', component: PageNotFoundComponent },

@@ -45,6 +45,9 @@ import { PartySupplyItemComponent } from './admin/party-supply-item/party-supply
 import { PartyPaymentComponent } from './admin/party-payment/party-payment.component';
 import { PartyLadgerHistoryComponent } from './admin/party-ladger-history/party-ladger-history.component';
 import { PartyDueHistoryComponent } from './admin/party-due-history/party-due-history.component';
+import { ProductCategoryComponent } from './admin/product-category/product-category.component';
+import { ProductSizeComponent } from './admin/product-size/product-size.component';
+import { ProductComponent } from './admin/product/product.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +81,10 @@ import { PartyDueHistoryComponent } from './admin/party-due-history/party-due-hi
     PartySupplyItemComponent,
     PartyPaymentComponent,
     PartyLadgerHistoryComponent,
-    PartyDueHistoryComponent
+    PartyDueHistoryComponent,
+    ProductCategoryComponent,
+    ProductSizeComponent,
+    ProductComponent
   ],
   imports: [
     BrowserModule,

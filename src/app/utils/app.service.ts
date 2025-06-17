@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ConstantData } from './constant-data';
+import { OrderByPipe } from './../pipes/order-by.pipe';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,46 @@ export class AppService {
     return this.http.post(this.apiUrl + "Party/DeleteParty", obj, { headers: this.headers })
   }
   ///
+
+  getProductCategoryList(obj: any) {
+    return this.http.post(this.apiUrl + "Product/ProductCategoryList", obj, { headers: this.headers })
+  }
+  SaveProductCategory(obj: any) {
+    return this.http.post(this.apiUrl + "Product/SaveProductCategory", obj, { headers: this.headers })
+  }
+  DeleteProductCategory(obj: any) {
+    return this.http.post(this.apiUrl + "Product/DeleteProductCategory", obj, { headers: this.headers })
+  }
+  //////
+  getProductSizeList(obj: any) {
+    return this.http.post(this.apiUrl + "ProductSize/ProductSizeList", obj, { headers: this.headers })
+  }
+  SaveProductSize(obj: any) {
+    return this.http.post(this.apiUrl + "ProductSize/SaveProductSize", obj, { headers: this.headers })
+  }
+  DeleteProductSize(obj: any) {
+    return this.http.post(this.apiUrl + "ProductSize/DeleteProductSize", obj, { headers: this.headers })
+  }
+  getProductSizeByCategoryList(obj: any) {
+    return this.http.post(this.apiUrl + "ProductSize/ProductSizeByCategoryList", obj, { headers: this.headers })
+  }
+
+  //////
+  getProductList(obj: any) {
+    return this.http.post(this.apiUrl + "Product/ProductList", obj, { headers: this.headers })
+  }
+  SaveProduct(obj: any) {
+    return this.http.post(this.apiUrl + "Product/SaveProduct", obj, { headers: this.headers })
+  }
+  DeleteProduct(obj: any) {
+    return this.http.post(this.apiUrl + "Product/DeleteProduct", obj, { headers: this.headers })
+  }
+  getProductListByCategory(obj: any) {
+  return this.http.post(this.apiUrl + "Product/ProductListByCategory", obj, { headers: this.headers });
+}
+
+
+
   // Location
   getLocationList(obj: any) {
     return this.http.post(this.apiUrl + "Location/LocationList", obj, { headers: this.headers })
@@ -79,27 +120,27 @@ export class AppService {
 
   //Paymentdetail
 
-  GetPartyPaymentDetailList(obj:any){
-    return this.http.post(this.apiUrl+"PartyPaymentDetail/PartyPaymentDetailList",obj,{headers:this.headers})
+  GetPartyPaymentDetailList(obj: any) {
+    return this.http.post(this.apiUrl + "PartyPaymentDetail/PartyPaymentDetailList", obj, { headers: this.headers })
   }
 
-  GetParyDueHistorylist(obj:any){
-    return this.http.post(this.apiUrl+"PartyPaymentDetail/PartyDueHistoryList",obj,{headers:this.headers})
+  GetParyDueHistorylist(obj: any) {
+    return this.http.post(this.apiUrl + "PartyPaymentDetail/PartyDueHistoryList", obj, { headers: this.headers })
   }
 
-//Dashboard
+  //Dashboard
 
-getDashboardSummary(obj:any){
-  return this.http.post(this.apiUrl+"Dashboard/DashboardSummary",obj,{headers:this.headers})
-}
+  getDashboardSummary(obj: any) {
+    return this.http.post(this.apiUrl + "Dashboard/DashboardSummary", obj, { headers: this.headers })
+  }
 
 
 
 
   //
 
-  PartyLadgerHistory(obj:any){
-    window.open(this.baseUrl+"report/PartyLadgerHistory/"+obj);
+  PartyLadgerHistory(obj: any) {
+    window.open(this.baseUrl + "report/PartyLadgerHistory/" + obj);
   }
   // District
   getDistrictList(obj: any) {

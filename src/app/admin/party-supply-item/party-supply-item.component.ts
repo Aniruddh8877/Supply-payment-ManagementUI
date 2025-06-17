@@ -26,7 +26,7 @@ export class PartySupplyItemComponent {
   CityList: any = [];
   PartySupplyItemList: any = [];
   PartySupplyItem: any = {};
-  PartyPaymentDetail:any={};
+  PartyPaymentDetail: any = {};
 
   isSubmitted = false;
   PageSize = ConstantData.PageSizes;
@@ -44,7 +44,18 @@ export class PartySupplyItemComponent {
   PartyList: any = [];
   PartySupplyItemListAll: any;
   filterPartyName: any;
-  PaymentDate:any={};
+  PaymentDate: any = {};
+  ProductCategoryList: any = [];
+  filteredPackageList: any = [];
+  Product: any = [];
+  ProductList: any = [];
+  filteredProductList: any = [];
+  ProductItem: any;
+  ProductsizeList: any = [];
+  ProductSizeItem: any = [];
+  filteredProductSizeList: any = [];
+  SelectProductItemList: any=[];
+  // data:any={};
 
   sort(key: any) {
     this.sortKey = key;
@@ -67,6 +78,8 @@ export class PartySupplyItemComponent {
     this.staffLogin = this.localService.getEmployeeDetail();
     this.validiateMenu();
     this.getPartySupplyItemList();
+    this.getProductCategoryList();
+
     this.getPartyList();
     //this.getStatusList();
     // this.getStateList();
@@ -175,6 +188,32 @@ export class PartySupplyItemComponent {
     );
   }
 
+  getProductCategoryList() {
+    var obj: RequestModel = {
+      request: this.localService.encrypt(JSON.stringify({})).toString(),
+    };
+    this.dataLoading = true;
+    this.service.getProductCategoryList(obj).subscribe(
+      (r1) => {
+        let response = r1 as any;
+        if (response.Message == ConstantData.SuccessMessage) {
+          this.ProductCategoryList = response.ProductCategoryList;
+          this.filterState = this.StateList;
+          console.log(this.ProductCategoryList);
+
+        } else {
+          this.toastr.error(response.Message);
+        }
+        this.dataLoading = false;
+      },
+      (err) => {
+        this.toastr.error('Error while fetching records');
+        this.dataLoading = false;
+      }
+    );
+  }
+
+
 
   getPartySupplyItemList() {
 
@@ -204,7 +243,7 @@ export class PartySupplyItemComponent {
 
 
   savePartySupplyItem() {
-    this.isSubmitted=true
+    this.isSubmitted = true
     this.formPartySupplyItem.control.markAllAsTouched();
     if (this.formPartySupplyItem.invalid) {
       this.toastr.error("Fill all the required fields !!")
@@ -218,8 +257,11 @@ export class PartySupplyItemComponent {
     this.PaymentDate = Date.now;
     var data = {
       GetPartySupplyItem: this.PartySupplyItem,
-      GetPartyPaymentDetail:this.PartySupplyItem
+      GetPartyPaymentDetail: this.PartySupplyItem,
+      GetSupplyItemDetails : this.SelectProductItemList,
     }
+    console.log(data);
+    
     var obj: RequestModel = {
       request: this.localService.encrypt(JSON.stringify(data)).toString()
     }
@@ -261,5 +303,178 @@ export class PartySupplyItemComponent {
     this.PartySupplyItemList.PackageName = '';
   }
 
+  filterpackageList(value: string) {
+    const filterValue = value?.toLowerCase() || '';
+    this.filteredPackageList = this.ProductCategoryList.filter(
+      (option: any) =>
+        option.ProductCategoryName?.toLowerCase().includes(filterValue)
+    );
+  }
 
+  afterPackageSelected(event: any) {
+    const selectedName = event.option.value;
+    const selected = this.ProductCategoryList.find(
+      (x: any) => x.ProductCategoryName === selectedName
+    );
+
+    if (selected) {
+      this.Product = {
+        ...this.Product,
+        ...selected
+      };
+    }
+    console.log(this.Product.ProductCategoryId);
+
+    this.getProductList(this.Product.ProductCategoryId)
+    this.getProductSizeList(this.Product.ProductCategoryId)
+
+  }
+ resetCategoryForm(){
+  this.Product ={
+    ProductCategoryName : "",
+    ProductSizeName : "",
+    ProductItemName : "",
+    Quantity : "",
+
+  }
+ }
+
+  PackageClear() {
+    this.resetCategoryForm();
+    this.filteredPackageList = [...this.ProductCategoryList];
+  }
+
+
+
+
+  getProductList(data: any) {
+
+    var ProductCategoryId = data;
+
+    var obj: RequestModel = {
+      request: this.localService.encrypt(JSON.stringify({ ProductCategoryId })).toString(),
+    };
+    this.dataLoading = true;
+    this.service.getProductListByCategory(obj).subscribe(
+      (r1) => {
+        let response = r1 as any;
+        if (response.Message == ConstantData.SuccessMessage) {
+          this.ProductList = response.ProductList;
+          this.filterState = this.StateList;
+          console.log(this.ProductsizeList);
+          
+
+        } else {
+          this.toastr.error(response.Message);
+        }
+        this.dataLoading = false;
+      },
+      (err) => {
+        this.toastr.error('Error while fetching records');
+        this.dataLoading = false;
+      }
+    );
+  }
+
+  filterProductList(value: string) {
+    const filterValue = value?.toLowerCase() || '';
+    this.filteredProductList = this.ProductList.filter(
+      (option: any) =>
+        option.ProductName?.toLowerCase().includes(filterValue)
+    );
+  }
+
+  afterProductSelected(event: any) {
+    const selectedName = event.option.value;
+    const selected = this.ProductList.find(
+      (x: any) => x.ProductName === selectedName
+    );
+
+    if (selected) {
+      this.ProductItem = {
+        ...this.ProductItem,
+        ...selected
+      };
+    }
+
+    this.Product.ProductId = selected.ProductId;
+  }
+
+  ProductClear() {
+    // this.resetPackageForm();
+    // this.filteredPackageList = [...this.ProductCategoryList];
+  }
+
+
+
+  getProductSizeList(data: any) {
+
+    var ProductCategoryId = data;
+    var obj: RequestModel = {
+      request: this.localService.encrypt(JSON.stringify({ ProductCategoryId })).toString(),
+    };
+    this.dataLoading = true;
+    this.service.getProductSizeByCategoryList(obj).subscribe(
+      (r1) => {
+        let response = r1 as any;
+        if (response.Message == ConstantData.SuccessMessage) {
+          this.ProductsizeList = response.ProductSizeByCategoryList;
+          this.filterState = this.StateList;
+          console.log(this.ProductsizeList);
+
+        } else {
+          this.toastr.error(response.Message);
+        }
+        this.dataLoading = false;
+      },
+      (err) => {
+        this.toastr.error('Error while fetching records');
+        this.dataLoading = false;
+      }
+    );
+  }
+
+  filterProductSizeList(value: string) {
+    const filterValue = value?.toLowerCase() || '';
+    this.filteredProductSizeList = this.ProductsizeList.filter(
+      (option: any) =>
+        option.ProductSizeName?.toLowerCase().includes(filterValue)
+    );
+  }
+
+  afterProductSizeSelected(event: any) {
+    const selectedName = event.option.value;
+    const selected = this.ProductsizeList.find(
+      (x: any) => x.ProductSizeName === selectedName
+    );
+
+    if (selected) {
+      this.ProductSizeItem = {
+        ...this.ProductSizeItem,
+        ...selected
+      };
+      
+    }
+    this.Product.ProductSizeId = selected.ProductSizeId;
+
+  }
+
+  ProductSizeClear() {
+    // this.resetPackageForm();
+    // this.filteredPackageList = [...this.ProductCategoryList];
+  }
+
+
+
+
+ addProductItem() {
+      this.SelectProductItemList.push(this.Product);
+    }
+
+  RemoveProduct(index: number) {
+    if (confirm('Are you sure you want to remove this package?')) {
+      this.SelectProductItemList.splice(index, 1);
+      
+    }
+  }
 }
